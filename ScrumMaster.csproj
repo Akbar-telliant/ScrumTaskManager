@@ -6,4 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="8.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MudBlazor" />
+  </ItemGroup>
+
 </Project>
