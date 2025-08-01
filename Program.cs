@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
-using ScrumMaster.Components;
+using ScrumMaster;
+using ScrumMaster.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,13 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddHttpClient();
 builder.Services.AddCascadingAuthenticationState();
 
+builder.Services.AddDbContext<ScrumDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("MySqlDb"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlDb"))
+    )
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,10 +49,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseAntiforgery();
-
 app.MapStaticAssets();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
