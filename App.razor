@@ -7,6 +7,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
+    <link href=@Assets["_content/MudBlazor/MudBlazor.min.css"] rel="stylesheet" />
+    <link href=@Assets["_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css"] rel="stylesheet" />
+    <link href=@Assets["_content/Radzen.Blazor/css/material-base.css"] rel="stylesheet" />
+    <link href=@Assets["_content/MudBlazor.FontIcons.MaterialSymbols/css/font.min.css"] rel="stylesheet" />
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["ScrumMaster.styles.css"]" />
@@ -18,6 +22,11 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script src=@Assets["_content/Radzen.Blazor/Radzen.Blazor.js"]></script>
+    <script src=@Assets["scripts/bundle.js"]></script>
+    <script src=@Assets["_content/MudBlazor/MudBlazor.min.js"]></script>
+    <script src=@Assets["_content/Extensions.MudBlazor.StaticInput/NavigationObserver.js"]></script>
+    <script src=@Assets["_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"]></script>
 </body>
 
 </html>

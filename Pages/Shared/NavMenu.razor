@@ -1,16 +1,17 @@
 ﻿@using MudBlazor
 
-<MudNavMenu>
+<MudPaper Width="250px" Class="py-3" Elevation="0">
+    <MudNavMenu>
+        <h4>
+            <MudText Class="px-4">Scrum Master</MudText>
+        </h4>
+        <MudText Typo="Typo.subtitle2" Class="px-4 mud-text-secondary">Version 1.0</MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/">Home</MudNavLink>
+        <MudNavLink Href="/admin/client-config">Client Configuration</MudNavLink>
+        <MudNavLink Href="/admin/project-config">Project Configuration</MudNavLink>
 
-    <!-- Home -->
-    <MudNavLink Href="/">
-        Home
-    </MudNavLink>
+        <!-- Add more links here if needed -->
 
-    <!-- Project Configuration -->
-    <MudNavLink Href="/admin/client-config">Client Configuration</MudNavLink>
-    <MudNavLink Href="/admin/project-config">Project Configuration</MudNavLink>
-
-    <!-- Add more links here if needed -->
-
-</MudNavMenu>
+    </MudNavMenu>
+</MudPaper>
