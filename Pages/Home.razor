@@ -1,4 +1,16 @@
-﻿@page "/"
+﻿@using MudBlazor
+@page "/"
 
 <h1>ScrumMaster</h1>
-<p>Welcome to ScrumMaster – your Agile project companion.</p>
+<p>Welcome to  ScrumMaster – your Agile project companion.</p>
+
+
+<MudTextField @bind-value="Text" InputType="InputType.Text" Variant="Variant.Outlined"></MudTextField>
+
+<MudButton Color="Color.Primary" OnClick="() => OnClickAsync()"> Submit </MudButton>
+
+
+
+
+
+

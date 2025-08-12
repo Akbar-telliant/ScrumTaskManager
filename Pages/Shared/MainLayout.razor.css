@@ -9,8 +9,9 @@ main {
 }
 
 .sidebar {
-    background-color: darkblue;
+    background-color: steelblue;
     color:white;    
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .top-row {
