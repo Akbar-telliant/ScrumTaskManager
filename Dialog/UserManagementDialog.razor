@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using ScrumMaster.Models
+@using static ScrumMaster.Models.Users
+
+<EditForm Model="@Users" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <MudDialog Style="width:450px;">
+      <TitleContent>
+        <MudText Typo="Typo.subtitle1">
+           User Add/Edit
+        </MudText>
+      </TitleContent>
+      <DialogContent>
+         <MudTextField Label="First name" @bind-Value="Users!.UserName" For="@(() => Users!.UserName)" />
+         <MudTextField Label="Email" @bind-Value="Users!.Email" For="@(() => Users.Email)" />
+             <MudSpacer  />
+            <MudSelect T="TUserRole" @bind-Value="Users!.Role">
+             <MudSelectItem Value="Users.TUserRole.Admin" />
+             <MudSelectItem Value="Users.TUserRole.User" />                
+         </MudSelect>
+      </DialogContent>
+      <DialogActions>
+            <MudButton OnClick="@(() => MudDialog?.Cancel())">Close</MudButton>
+            <MudButton ButtonType="ButtonType.Submit">Add</MudButton>
+      </DialogActions>
+      </MudDialog>
+</EditForm>
