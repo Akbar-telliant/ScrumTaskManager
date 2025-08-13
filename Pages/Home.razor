@@ -3,11 +3,14 @@
 
 <h1>ScrumMaster</h1>
 <p>Welcome to  ScrumMaster – your Agile project companion.</p>
-
-
+<MudLayout>
 <MudTextField @bind-value="Text" InputType="InputType.Text" Variant="Variant.Outlined"></MudTextField>
 
-<MudButton Color="Color.Primary" OnClick="() => OnClickAsync()"> Submit </MudButton>
+<MudButton Color="Color.Primary" OnClick="OnClickAsync"> Submit </MudButton>
+
+</MudLayout>
+
+
 
 
 
