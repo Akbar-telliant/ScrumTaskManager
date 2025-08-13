@@ -3,11 +3,20 @@
 
 @inherits LayoutComponentBase
 
+
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
 <MudLayout>
 
     <div class="page">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div>
             <NavMenu />
         </div>
 
