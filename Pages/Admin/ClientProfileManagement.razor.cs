@@ -7,7 +7,7 @@ namespace ScrumMaster.Pages.Admin;
 /// <summary>
 /// Component for client profile operations.
 /// </summary>
-public partial class ClientConfiguration : ComponentBase
+public partial class ClientProfileManagement : ComponentBase
 {
     /// <summary>
     /// Stores client profile data.
