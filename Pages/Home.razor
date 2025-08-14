@@ -1,14 +1,72 @@
 ﻿@using MudBlazor
+
+
 @page "/"
 
-<h1>ScrumMaster</h1>
-<p>Welcome to  ScrumMaster – your Agile project companion.</p>
-<MudLayout>
-<MudTextField @bind-value="Text" InputType="InputType.Text" Variant="Variant.Outlined"></MudTextField>
+<MudPaper Class="pt-4 pb-4 pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
+        <MudText Typo="Typo.h5">Scrum Management</MudText>
+        <MudStack Row="true" Spacing="1">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddRow" StartIcon="@Icons.Material.Filled.Add">Add Row</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="ResetData" StartIcon="@Icons.Material.Filled.Restore">Reset</MudButton>
+        </MudStack>
+    </MudStack>
 
-<MudButton Color="Color.Primary" OnClick="OnClickAsync"> Submit </MudButton>
+    <MudTable Items="items" Dense="true" Hover="true" Bordered="true" Striped="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh Style="width: 18%">Name</MudTh>
+            <MudTh Style="width: 18%">Project</MudTh>
+            <MudTh Style="width: 10%">ID</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh Style="width: 14%">Status</MudTh>
+            <MudTh Style="width: 140px">Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                <MudSelect T="string" @bind-Value="context.Name" Dense="true" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var n in Names)
+                    {
+                        <MudSelectItem Value="@n">@n</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd>
+                <MudSelect T="string" @bind-Value="context.Project" Dense="true" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var p in Projects)
+                    {
+                        <MudSelectItem Value="@p">@p</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd>
+                <MudTextField T="string" @bind-Value="context.Id" Immediate="true" />
+            </MudTd>
+            <MudTd>
+                <MudTextField T="string" Lines="2" @bind-Value="context.Description" Immediate="true" Placeholder="Short description" />
+            </MudTd>
+            <MudTd>
+                <MudSelect T="string" @bind-Value="context.Status" Dense="true" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (var s in Statuses)
+                    {
+                        <MudSelectItem Value="@s">@s</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd>
+                <MudStack Row="true" Spacing="1">
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Color="Color.Default" Disabled="@IsFirst(context)" OnClick="@(() => MoveUp(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Color="Color.Default" Disabled="@IsLast(context)" OnClick="@(() => MoveDown(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Remove(context))" />
+                </MudStack>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, 10, 20 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
 
-</MudLayout>
+
 
 
 

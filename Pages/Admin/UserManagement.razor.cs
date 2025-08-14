@@ -38,7 +38,7 @@ namespace ScrumMaster.Pages.Admin
 
         public async Task DeleteUser(Users value)
         {
-            await Task.Yield();
+            users.Remove(value);
         }
 
     }
