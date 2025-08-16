@@ -6,18 +6,18 @@ using ScrumMaster.Models;
 namespace ScrumMaster.Dialog;
 
 /// <summary>
-/// 
+/// Dialog for adding or editing client profiles.
 /// </summary>
 public partial class ClientProfileManagementDialog
 {
     /// <summary>
-    /// 
+    /// Dialog instance reference.
     /// </summary>
     [CascadingParameter]
     IMudDialogInstance? MudDialog { get; set; }
 
     /// <summary>
-    /// Client profile data model.
+    /// Client profile data model (passed in from parent).
     /// </summary>
     [Parameter]
     public ClientProfile ClientProfile { get; set; } = new ClientProfile();
@@ -37,7 +37,7 @@ public partial class ClientProfileManagementDialog
     /// <summary>
     /// Handles form submission when the form is valid.
     /// </summary>
-    /// <returns>A Task representing the async operation.</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task OnValidSubmitAsync()
     {
         await SaveClientAsync(ClientProfile);
@@ -45,12 +45,24 @@ public partial class ClientProfileManagementDialog
     }
 
     /// <summary>
-    /// Saves the client to the database.
+    /// Saves or updates the client profile in the database.
     /// </summary>
-    /// /// <returns>A Task representing the async operation.</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task SaveClientAsync(ClientProfile client)
     {
-        DbContext.ClientProfile.Add(client);
+        var existing = await DbContext.ClientProfile.FindAsync(client.Id);
+
+        if (existing is null)
+        {
+            // New entity → Add
+            DbContext.ClientProfile.Add(client);
+        }
+        else
+        {
+            // Existing entity → Update values without attaching duplicate
+            DbContext.Entry(existing).CurrentValues.SetValues(client);
+        }
+
         await DbContext.SaveChangesAsync();
     }
 

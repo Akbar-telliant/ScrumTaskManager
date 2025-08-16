@@ -1,8 +1,12 @@
 ﻿@page "/admin/client-config"
 
 @using MudBlazor
+@using ScrumMaster.Data
 @using ScrumMaster.Models
+
 @inject IDialogService DialogService
+@inject ScrumMasterDbContext DbContext
+@inject ISnackbar Snackbar
 
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
@@ -11,11 +15,11 @@
 
         <MudIconButton Class="add-btn"
                        Style="width: 40px;"
-                       Size="Size.Small" 
-                       Color="Color.Primary" 
-                       Variant="Variant.Filled" 
-                       Icon="@Icons.Material.Rounded.Add" 
-                       OnClick="AddClient" />
+                       Size="Size.Small"
+                       Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       Icon="@Icons.Material.Rounded.Add"
+                       OnClick="AddClientAsync" />
 
         <MudTable Items="@clients" Hover="true" Striped="true" Dense="true">
             <HeaderContent>
@@ -39,10 +43,11 @@
                 <MudTd DataLabel="Default Team Size">@context.DefaultTeamSize</MudTd>
                 <MudTd DataLabel="Notes">@context.Notes</MudTd>
                 <MudTd DataLabel="Actions">
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" 
-                               OnClick="@(() => EditClient(@context))">Edit</MudButton>
-                    <MudButton Variant="Variant.Text" Color="Color.Error" 
-                               OnClick="@(() => DeleteClient(@context))">Delete</MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                               OnClick="@(() => EditClientAsync(@context))">Edit</MudButton>
+                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                               OnClick="@(() => DeleteClientAsync(context))">Delete</MudButton>
+
                 </MudTd>
             </RowTemplate>
             <PagerContent>
