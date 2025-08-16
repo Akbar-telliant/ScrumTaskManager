@@ -35,7 +35,7 @@ public partial class ClientProfileManagement : ComponentBase
     {
         var parameters = new DialogParameters<ClientProfileManagementDialog>
             {
-                { x => x.Client, new ClientProfile() }
+                { x => x.ClientProfile, new ClientProfile() }
             };
 
         await DialogService.ShowAsync<ClientProfileManagementDialog>(string.Empty, parameters);
