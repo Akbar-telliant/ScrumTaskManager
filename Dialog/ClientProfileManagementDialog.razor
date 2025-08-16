@@ -3,31 +3,31 @@
 @using ScrumMaster.Models
 @using static ScrumMaster.Models.Users
 
-<EditForm Model="@Client" OnValidSubmit="OnValidSubmitAsync">
+<EditForm Model="@ClientProfile" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator />
     <MudDialog Style="width:450px;">
         <DialogContent>
             <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
-            <MudTextField T="string" @bind-Value="Client.Name"
+            <MudTextField T="string" @bind-Value="ClientProfile.Name"
                           Label="Client Name" Required="true"
-                          For="@(() => Client.Name)" />
+                          For="@(() => ClientProfile.Name)" />
 
-            <MudTextField T="string" @bind-Value="Client.Code"
+            <MudTextField T="string" @bind-Value="ClientProfile.Code"
                           Label="Client Code"
-                          For="@(() => Client.Code)" />
+                          For="@(() => ClientProfile.Code)" />
 
-            <MudCheckBox T="bool" @bind-Checked="Client.IsActive"
+            <MudCheckBox T="bool" @bind-Checked="ClientProfile.IsActive"
                          Label="Active" />
 
-            <MudNumericField T="int?" @bind-Value="Client.DefaultTeamSize"
+            <MudNumericField T="int?" @bind-Value="ClientProfile.DefaultTeamSize"
                              Label="Default Team Size"
                              Min="0" Max="1000"
-                             For="@(() => Client.DefaultTeamSize)" />
+                             For="@(() => ClientProfile.DefaultTeamSize)" />
 
-            <MudTextField T="string" @bind-Value="Client.Notes"
+            <MudTextField T="string" @bind-Value="ClientProfile.Notes"
                           Label="Notes" Lines="3"
-                          For="@(() => Client.Notes)" />
+                          For="@(() => ClientProfile.Notes)" />
         </DialogContent>
 
         <DialogActions>

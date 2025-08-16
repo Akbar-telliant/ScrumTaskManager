@@ -5,6 +5,8 @@ using ScrumMaster.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Get connection string
+var connectionString = builder.Configuration.GetConnectionString("MySqlDb");
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
@@ -12,8 +14,6 @@ builder.Services.AddServerSideBlazor();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
-
 
 builder.Services.AddMudServices(config =>
 {
@@ -25,17 +25,13 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.VisibleStateDuration = 3000;
     config.SnackbarConfiguration.HideTransitionDuration = 250;
     config.SnackbarConfiguration.ShowTransitionDuration = 250;
-    config.SnackbarConfiguration.SnackbarVariant = MudBlazor.Variant.Filled;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 builder.Services.AddHttpClient();
 builder.Services.AddCascadingAuthenticationState();
 
-builder.Services.AddDbContext<ScrumDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("MySqlDb"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlDb"))
-    )
-);
+builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
 
