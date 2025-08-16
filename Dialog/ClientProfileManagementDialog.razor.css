@@ -1,0 +1,6 @@
+﻿/* Add spacing between form fields */
+.mud-dialog-content > .mud-text-field,
+.mud-dialog-content > .mud-numeric-field,
+.mud-dialog-content > .mud-checkbox {
+    margin-bottom: 12px;
+}

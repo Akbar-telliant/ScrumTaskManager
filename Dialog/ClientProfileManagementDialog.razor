@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using ScrumMaster.Models
+@using static ScrumMaster.Models.Users
+
+<EditForm Model="@Client" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <MudDialog Style="width:450px;">
+        <DialogContent>
+            <MudText Typo="Typo.h6">@DialogTitle</MudText>
+
+            <MudTextField T="string" @bind-Value="Client.Name"
+                          Label="Client Name" Required="true"
+                          For="@(() => Client.Name)" />
+
+            <MudTextField T="string" @bind-Value="Client.Code"
+                          Label="Client Code"
+                          For="@(() => Client.Code)" />
+
+            <MudCheckBox T="bool" @bind-Checked="Client.IsActive"
+                         Label="Active" />
+
+            <MudNumericField T="int?" @bind-Value="Client.DefaultTeamSize"
+                             Label="Default Team Size"
+                             Min="0" Max="1000"
+                             For="@(() => Client.DefaultTeamSize)" />
+
+            <MudTextField T="string" @bind-Value="Client.Notes"
+                          Label="Notes" Lines="3"
+                          For="@(() => Client.Notes)" />
+        </DialogContent>
+
+        <DialogActions>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       OnClick="Cancel">
+                Cancel
+            </MudButton>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       ButtonType="ButtonType.Submit">
+                Save
+            </MudButton>            
+        </DialogActions>
+    </MudDialog>
+</EditForm>

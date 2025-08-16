@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using ScrumMaster.Dialog;
 using ScrumMaster.Models;
 
 namespace ScrumMaster.Pages.Admin;
@@ -30,9 +31,14 @@ public partial class ClientProfileManagement : ComponentBase
     /// <summary>
     /// Opens a dialog to add a new client profile.
     /// </summary>
-    private void AddClient()
+    private async void AddClient()
     {
-        // TODO: Open dialog to add new ClientProfile
+        var parameters = new DialogParameters<ClientProfileManagementDialog>
+            {
+                { x => x.Client, new ClientProfile() }
+            };
+
+        await DialogService.ShowAsync<ClientProfileManagementDialog>(string.Empty, parameters);
     }
 
     /// <summary>

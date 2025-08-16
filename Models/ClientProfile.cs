@@ -20,7 +20,7 @@ public class ClientProfile
     /// </summary>
     [Required(ErrorMessage = "Client name is required")]
     [StringLength(100, ErrorMessage = "Max 100 characters")]
-    public string? Name { get; set; }
+    public string? Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Unique short client code.
