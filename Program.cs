@@ -5,8 +5,10 @@ using ScrumMaster.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Get connection string
+// Add DbContext for MySQL
 var connectionString = builder.Configuration.GetConnectionString("MySqlDb");
+builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
@@ -30,9 +32,6 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddHttpClient();
 builder.Services.AddCascadingAuthenticationState();
 
-builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +40,13 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+// Ensure database is created on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ScrumMasterDbContext>();
+    db.Database.EnsureCreated();  // <-- Creates DB + tables if not exists
 }
 
 app.UseHttpsRedirection();
