@@ -1,0 +1,77 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ScrumMaster.Data;
+
+namespace ScrumMaster.Services;
+
+/// <summary>
+/// Generic CRUD service for EF Core entities with an 'Id' property.
+/// </summary>
+public class EntityDataService<T> where T : class
+{
+    /// <summary>
+    /// Database context instance.
+    /// </summary>
+    private readonly ScrumMasterDbContext _context;
+
+    /// <summary>
+    /// EF Core DbSet for the entity type.
+    /// </summary>
+    private readonly DbSet<T> _dbSet;
+
+    /// <summary>
+    /// Initializes the service with the given DbContext.
+    /// </summary>
+    public EntityDataService(ScrumMasterDbContext context)
+    {
+        _context = context;
+        _dbSet = _context.Set<T>();
+    }
+
+    /// <summary>
+    /// Adds a new entity and saves changes.
+    /// </summary>
+    public async Task<T> AddAsync(T entity)
+    {
+        await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
+
+    /// <summary>
+    /// Gets all entities without tracking.
+    /// </summary>
+    public async Task<List<T>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
+
+    /// <summary>
+    /// Finds an entity by its Id.
+    /// </summary>
+    public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
+
+    /// <summary>
+    /// Updates an existing entity safely.
+    /// </summary>
+    public async Task UpdateAsync(T entity)
+    {
+        var keyProperty = typeof(T).GetProperty("Id");
+        if (keyProperty == null) throw new InvalidOperationException($"Entity {typeof(T).Name} must have an 'Id' property.");
+
+        var id = keyProperty.GetValue(entity);
+        var existing = await _dbSet.FindAsync(id);
+        if (existing == null) throw new KeyNotFoundException($"Entity with Id {id} not found.");
+
+        _context.Entry(existing).CurrentValues.SetValues(entity);
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Deletes an entity by Id.
+    /// </summary>
+    public async Task DeleteAsync(int id)
+    {
+        var entity = await _dbSet.FindAsync(id);
+        if (entity == null) throw new KeyNotFoundException($"Entity with Id {id} not found.");
+
+        _dbSet.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+}

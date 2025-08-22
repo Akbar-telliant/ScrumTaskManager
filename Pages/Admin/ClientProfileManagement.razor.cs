@@ -1,91 +1,110 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using ScrumMaster.Dialog;
 using ScrumMaster.Models;
+using ScrumMaster.Services;
 
 namespace ScrumMaster.Pages.Admin;
 
 /// <summary>
-/// Component for client profile operations.
+/// Page for managing client profiles.
 /// </summary>
 public partial class ClientProfileManagement : ComponentBase
 {
     /// <summary>
-    /// Stores client profile data.
+    /// Local list of client profiles.
     /// </summary>
     private List<ClientProfile> clients = new();
 
     /// <summary>
-    /// Lifecycle method: called when the component is initialized.
+    /// Service for performing CRUD operations on <see cref="ClientProfile"/> entities.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    [Inject]
+    private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
+
+    /// <summary>
+    /// Provides dialog functionality for displaying modal dialogs.
+    /// </summary>
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    /// <summary>
+    /// Service for displaying toast-style notification messages.
+    /// </summary>
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
+
+    /// <summary>
+    /// On page load → fetch all clients.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         await LoadClientsAsync();
     }
 
     /// <summary>
-    /// Load client profiles from database.
+    /// Fetch clients from service.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task LoadClientsAsync()
     {
-        clients = await DbContext.ClientProfile.ToListAsync();
+        clients = await ClientService.GetAllAsync();
     }
 
     /// <summary>
-    /// Opens a dialog to add a new client profile asynchronously.
+    /// Open dialog to add new client.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task AddClientAsync()
     {
         var parameters = new DialogParameters<ClientProfileManagementDialog>
-    {
-        { x => x.ClientProfile, new ClientProfile() },
-        { x => x.DialogTitle, "Add Client Profile" }
-    };
+        {
+            { x => x.ClientProfile, new ClientProfile() },
+            { x => x.DialogTitle, "Add Client Profile" }
+        };
 
         var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Add Client", parameters);
         var result = await dialog.Result;
 
-        if (result != null && !result.Canceled)
+        if (result is { Canceled: false })
         {
-            // Refresh grid after saving
             await LoadClientsAsync();
-            StateHasChanged();
-
-            // Show success snackbar
             Snackbar.Add("Client profile added successfully!", Severity.Success);
         }
     }
 
     /// <summary>
-    /// Opens a dialog to edit the specified client profile.
+    /// Open dialog to edit an existing client.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task EditClientAsync(ClientProfile client)
     {
+        // Create a copy to avoid editing list item before save
+        var editableCopy = new ClientProfile
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Code = client.Code,
+            IsActive = client.IsActive,
+            DefaultTeamSize = client.DefaultTeamSize,
+            Notes = client.Notes
+        };
+
         var parameters = new DialogParameters<ClientProfileManagementDialog>
-    {
-        { x => x.ClientProfile, client },
-        { x => x.DialogTitle, "Edit Client Profile" }
-    };
+        {
+            { x => x.ClientProfile, editableCopy },
+            { x => x.DialogTitle, "Edit Client Profile" }
+        };
 
         var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Edit Client", parameters);
         var result = await dialog.Result;
 
-        if (result != null && !result.Canceled)
+        if (result is { Canceled: false })
         {
             await LoadClientsAsync();
-            StateHasChanged();
             Snackbar.Add("Client profile updated successfully!", Severity.Info);
         }
     }
 
     /// <summary>
-    /// Confirms and deletes the specified client profile.
+    /// Confirm and delete a client.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task DeleteClientAsync(ClientProfile client)
     {
         bool? confirmed = await DialogService.ShowMessageBox(
@@ -96,15 +115,8 @@ public partial class ClientProfileManagement : ComponentBase
 
         if (confirmed == true)
         {
-            var existing = await DbContext.ClientProfile.FindAsync(client.Id);
-            if (existing is not null)
-            {
-                DbContext.ClientProfile.Remove(existing);
-                await DbContext.SaveChangesAsync();
-            }
-
+            await ClientService.DeleteAsync(client.Id);
             await LoadClientsAsync();
-            StateHasChanged();
             Snackbar.Add("Client profile deleted successfully!", Severity.Error);
         }
     }
