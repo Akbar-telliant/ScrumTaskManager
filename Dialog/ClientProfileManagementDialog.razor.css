@@ -1,6 +1,10 @@
-﻿/* Add spacing between form fields */
+﻿/* Scoped styles for ClientProfileManagementDialog */
 .mud-dialog-content > .mud-text-field,
 .mud-dialog-content > .mud-numeric-field,
 .mud-dialog-content > .mud-checkbox {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.mud-dialog-content {
+    padding-top: 12px;
 }

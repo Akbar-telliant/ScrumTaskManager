@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using ScrumMaster.Data;
 using ScrumMaster.Models;
+using ScrumMaster.Services;
 
 namespace ScrumMaster.Dialog;
 
@@ -14,13 +14,13 @@ public partial class ClientProfileManagementDialog
     /// Dialog instance reference.
     /// </summary>
     [CascadingParameter]
-    IMudDialogInstance? MudDialog { get; set; }
+    private IMudDialogInstance? MudDialog { get; set; }
 
     /// <summary>
-    /// Client profile data model (passed in from parent).
+    /// Client profile model (passed in from parent).
     /// </summary>
     [Parameter]
-    public ClientProfile ClientProfile { get; set; } = new ClientProfile();
+    public ClientProfile ClientProfile { get; set; } = new();
 
     /// <summary>
     /// Dialog header text.
@@ -29,45 +29,32 @@ public partial class ClientProfileManagementDialog
     public string DialogTitle { get; set; } = "Add Client Profile";
 
     /// <summary>
-    /// Injected DbContext for data access.
+    /// Entity data service for ClientProfile CRUD.
     /// </summary>
     [Inject]
-    private ScrumMasterDbContext DbContext { get; set; } = default!;
+    private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
 
     /// <summary>
-    /// Handles form submission when the form is valid.
+    /// Handles form submission.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task OnValidSubmitAsync()
+    private async Task OnValidSubmitAsync()
     {
-        await SaveClientAsync(ClientProfile);
+        if (ClientProfile.Id == 0)
+        {
+            // New entity → Add
+            await ClientService.AddAsync(ClientProfile);
+        }
+        else
+        {
+            // Existing entity → Update
+            await ClientService.UpdateAsync(ClientProfile);
+        }
+
         MudDialog?.Close(DialogResult.Ok(ClientProfile));
     }
 
     /// <summary>
-    /// Saves or updates the client profile in the database.
-    /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    private async Task SaveClientAsync(ClientProfile client)
-    {
-        var existing = await DbContext.ClientProfile.FindAsync(client.Id);
-
-        if (existing is null)
-        {
-            // New entity → Add
-            DbContext.ClientProfile.Add(client);
-        }
-        else
-        {
-            // Existing entity → Update values without attaching duplicate
-            DbContext.Entry(existing).CurrentValues.SetValues(client);
-        }
-
-        await DbContext.SaveChangesAsync();
-    }
-
-    /// <summary>
-    /// Closes the dialog without saving.
+    /// Closes dialog without saving.
     /// </summary>
     private void Cancel() => MudDialog?.Cancel();
 }

@@ -1,26 +1,27 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ScrumMaster;
 using ScrumMaster.Data;
+using ScrumMaster.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext for MySQL
-var connectionString = builder.Configuration.GetConnectionString("MySqlDb");
+// ----------------------
+// Configure Services
+// ----------------------
+
+// EF Core with SQLite (single registration)
 builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
+                      ?? "Data Source=scrummaster.db"));
 
-builder.Services.AddControllers();
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Entity data service
+builder.Services.AddScoped(typeof(EntityDataService<>));
 
+// MudBlazor
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
-
     config.SnackbarConfiguration.PreventDuplicates = true;
     config.SnackbarConfiguration.NewestOnTop = true;
     config.SnackbarConfiguration.ShowCloseIcon = true;
@@ -29,33 +30,39 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 250;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
+
+// Blazor (server-side interactive components)
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 builder.Services.AddHttpClient();
-builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-// Ensure database is created on startup
+// ----------------------
+// Database Init
+// ----------------------
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ScrumMasterDbContext>();
-    db.Database.EnsureCreated();  // <-- Creates DB + tables if not exists
+    db.Database.EnsureCreated(); // ✅ create SQLite db + tables if not exist
+}
+
+// ----------------------
+// Configure Middleware
+// ----------------------
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseStaticFiles();
 app.UseAntiforgery();
-app.MapStaticAssets();
 
+// Map root Razor component
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+   .AddInteractiveServerRenderMode();
 
 app.Run();

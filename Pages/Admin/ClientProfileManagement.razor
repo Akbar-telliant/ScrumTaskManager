@@ -1,12 +1,9 @@
 ﻿@page "/admin/client-config"
 
 @using MudBlazor
-@using ScrumMaster.Data
 @using ScrumMaster.Models
-
-@inject IDialogService DialogService
-@inject ScrumMasterDbContext DbContext
-@inject ISnackbar Snackbar
+@using ScrumMaster.Dialog
+@using ScrumMaster.Services
 
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
@@ -44,10 +41,9 @@
                 <MudTd DataLabel="Notes">@context.Notes</MudTd>
                 <MudTd DataLabel="Actions">
                     <MudButton Variant="Variant.Text" Color="Color.Primary"
-                               OnClick="@(() => EditClientAsync(@context))">Edit</MudButton>
+                               OnClick="@(() => EditClientAsync(context))">Edit</MudButton>
                     <MudButton Variant="Variant.Text" Color="Color.Error"
                                OnClick="@(() => DeleteClientAsync(context))">Delete</MudButton>
-
                 </MudTd>
             </RowTemplate>
             <PagerContent>
