@@ -39,4 +39,9 @@ public class ClientProfile
     /// </summary>
     [StringLength(500, ErrorMessage = "Max 500 characters")]
     public string? Notes { get; set; }
+
+    /// <summary>
+    /// Navigation property: projects under this client.
+    /// </summary>
+    public List<ProjectDetail> Projects { get; set; } = new();
 }

@@ -21,4 +21,25 @@ public class ScrumMasterDbContext : DbContext
     /// Table for client profiles.
     /// </summary>
     public DbSet<ClientProfile> ClientProfile { get; set; }
+
+    /// <summary>
+    /// Table for project detailes.
+    /// </summary>
+    public DbSet<ProjectDetail> ProjectDetail { get; set; } = null!;
+
+    /// <summary>
+    /// Configure entity relationships.
+    /// </summary>
+    /// <param name="modelBuilder"> EF model builder. </param>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Client ↔ Projects (One-to-Many)
+        modelBuilder.Entity<ClientProfile>()
+            .HasMany(c => c.Projects)
+            .WithOne(p => p.Client)
+            .HasForeignKey(p => p.ClientId)
+            .OnDelete(DeleteBehavior.Cascade); // delete projects when client is deleted
+    }
 }
