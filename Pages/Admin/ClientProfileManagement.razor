@@ -11,7 +11,6 @@
         <MudText Typo="Typo.subtitle1">Manage client details and settings.</MudText>
 
         <MudIconButton Class="add-btn"
-                       Style="width: 40px;"
                        Size="Size.Small"
                        Color="Color.Primary"
                        Variant="Variant.Filled"
@@ -23,28 +22,57 @@
                 <MudTh>Name</MudTh>
                 <MudTh>Code</MudTh>
                 <MudTh>Active</MudTh>
-                <MudTh>Default Team Size</MudTh>
                 <MudTh>Notes</MudTh>
-                <MudTh></MudTh>
+                <MudTh>Actions</MudTh>
             </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Code">@context.Code</MudTd>
-                <MudTd DataLabel="Active">
+
+            <RowTemplate Context="client">
+                <MudTd>@client.Name</MudTd>
+                <MudTd>@client.Code</MudTd>
+                <MudTd>
                     <MudChip T="string"
-                             Color="@(@context.IsActive ? Color.Success : Color.Error)"
+                             Color="@(@client.IsActive ? Color.Success : Color.Error)"
                              Variant="Variant.Filled">
-                        @(@context.IsActive ? "Yes" : "No")
+                        @(@client.IsActive ? "Yes" : "No")
                     </MudChip>
                 </MudTd>
-                <MudTd DataLabel="Notes">@context.Notes</MudTd>
-                <MudTd DataLabel="Actions">
+                <MudTd>@client.Notes</MudTd>
+                <MudTd>
                     <MudButton Variant="Variant.Text" Color="Color.Primary"
-                               OnClick="@(() => EditClientAsync(context))">Edit</MudButton>
+                               OnClick="@(() => EditClientAsync(client))">Edit</MudButton>
                     <MudButton Variant="Variant.Text" Color="Color.Error"
-                               OnClick="@(() => DeleteClientAsync(context))">Delete</MudButton>
+                               OnClick="@(() => DeleteClientAsync(client))">Delete</MudButton>
+
+                    @if (client.Projects?.Any() == true)
+                    {
+                        <MudButton Variant="Variant.Text" Color="Color.Secondary"
+                                   OnClick="@(() => ToggleProjects(client.Id))">
+                            @(ExpandedClients.Contains(client.Id) ? "Hide Projects" : "Show Projects")
+                        </MudButton>
+                    }
                 </MudTd>
             </RowTemplate>
+
+            <ChildRowContent Context="client">
+                @if (ExpandedClients.Contains(client.Id) && client.Projects?.Any() == true)
+                {
+                    <MudTable Items="client.Projects" Dense="true">
+                        <HeaderContent>
+                            <MudTh>Project Name</MudTh>
+                            <MudTh>Description</MudTh>
+                            <MudTh>Start Date</MudTh>
+                            <MudTh>End Date</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="project">
+                            <MudTd>@project.Name</MudTd>
+                            <MudTd>@project.Description</MudTd>
+                            <MudTd>@project.StartDate?.ToShortDateString()</MudTd>
+                            <MudTd>@(project.EndDate?.ToShortDateString() ?? "-")</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+            </ChildRowContent>
+
             <PagerContent>
                 <MudTablePager />
             </PagerContent>

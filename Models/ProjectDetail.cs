@@ -40,6 +40,12 @@ public class ProjectDetail
     public string? Description { get; set; }
 
     /// <summary>
+    /// Default team size for this project.
+    /// </summary>
+    [Range(1, 100, ErrorMessage = "Default team size must be between 1 and 100")]
+    public int DefaultTeamSize { get; set; }
+
+    /// <summary>
     /// Project start date.
     /// </summary>
     [DataType(DataType.Date)]
