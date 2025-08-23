@@ -1,0 +1,10 @@
+﻿/* Scoped styles for ProjectDetailDialog */
+.mud-dialog-content > .mud-text-field,
+.mud-dialog-content > .mud-date-picker,
+.mud-dialog-content > .mud-checkbox {
+    margin-bottom: 16px;
+}
+
+.mud-dialog-content {
+    padding-top: 12px;
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScrumMaster.Data;
+using System.Linq.Expressions;
 
 namespace ScrumMaster.Services;
 
@@ -38,9 +39,17 @@ public class EntityDataService<T> where T : class
     }
 
     /// <summary>
-    /// Gets all entities without tracking.
+    /// Gets all entities with optional navigation property includes.
     /// </summary>
-    public async Task<List<T>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
+    public async Task<List<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties)
+    {
+        IQueryable<T> query = _dbSet.AsNoTracking();
+
+        foreach (var includeProperty in includeProperties)
+            query = query.Include(includeProperty);
+
+        return await query.ToListAsync();
+    }
 
     /// <summary>
     /// Finds an entity by its Id.

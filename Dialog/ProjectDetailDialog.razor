@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using ScrumMaster.Models
+
+<EditForm Model="@ProjectDetail" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <MudDialog Style="width:500px;">
+        <DialogContent>
+            <MudText Typo="Typo.h6">@DialogTitle</MudText>
+
+            <MudTextField T="string"
+                          @bind-Value="ProjectDetail.Name"
+                          Label="Project Name"
+                          Required="true"
+                          For="@(() => ProjectDetail.Name)" />
+
+            <MudTextField T="string"
+                          @bind-Value="ProjectDetail.Description"
+                          Label="Description"
+                          Lines="3"
+                          For="@(() => ProjectDetail.Description)" />
+
+            <MudDatePicker @bind-Date="ProjectDetail.StartDate"
+                           Label="Start Date"
+                           For="@(() => ProjectDetail.StartDate)" />
+
+            <MudDatePicker @bind-Date="ProjectDetail.EndDate"
+                           Label="End Date"
+                           For="@(() => ProjectDetail.EndDate)" />
+
+            <MudCheckBox T="bool"
+                         @bind-Checked="ProjectDetail.IsActive"
+                         Label="Active" />
+        </DialogContent>
+
+        <DialogActions>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Outlined"
+                       OnClick="Cancel">
+                Cancel
+            </MudButton>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       ButtonType="ButtonType.Submit">
+                Save
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
