@@ -9,19 +9,27 @@ namespace ScrumMaster.Dialog;
 /// </summary>
 public partial class ProjectDetailDialog
 {
-    /// <summary>Dialog instance reference.</summary>
+    /// <summary>
+    /// Dialog instance reference.
+    /// </summary>
     [CascadingParameter]
     private IMudDialogInstance? MudDialog { get; set; }
 
-    /// <summary>Project detail model (passed in from parent).</summary>
+    /// <summary>
+    /// Project detail model (passed in from parent).
+    /// </summary>
     [Parameter]
     public ProjectDetail ProjectDetail { get; set; } = new();
 
-    /// <summary>Dialog header text.</summary>
+    /// <summary>
+    /// Dialog header text.
+    /// </summary>
     [Parameter]
     public string DialogTitle { get; set; } = "Add Project";
 
-    /// <summary>Entity data service for ProjectDetail CRUD.</summary>
+    /// <summary>
+    /// Entity data service for ProjectDetail CRUD.
+    /// </summary>
     [Inject]
     private EntityDataService<ProjectDetail> ProjectService { get; set; } = default!;
 

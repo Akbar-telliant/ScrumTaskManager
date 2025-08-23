@@ -16,6 +16,11 @@ public partial class ClientProfileManagement : ComponentBase
     private List<ClientProfile> clients = new();
 
     /// <summary>
+    /// Tracks expanded clients to show/hide project subgrid.
+    /// </summary>
+    private HashSet<int> ExpandedClients = new();
+
+    /// <summary>
     /// Service for performing CRUD operations on <see cref="ClientProfile"/> entities.
     /// </summary>
     [Inject]
@@ -50,14 +55,30 @@ public partial class ClientProfileManagement : ComponentBase
     }
 
     /// <summary>
+    /// Toggle display of project subgrid for a given client.
+    /// </summary>
+    /// <param name="clientId">ID of the client to toggle.</param>
+    private void ToggleProjects(int clientId)
+    {
+        if (ExpandedClients.Contains(clientId))
+        {
+            ExpandedClients.Remove(clientId);
+        }
+        else
+        {
+            ExpandedClients.Add(clientId);
+        }
+    }
+
+    /// <summary>
     /// Open dialog to add new client.
     /// </summary>
     private async Task AddClientAsync()
     {
-        var parameters = new DialogParameters<ClientProfileManagementDialog>
+        var parameters = new DialogParameters
         {
-            { x => x.ClientProfile, new ClientProfile() },
-            { x => x.DialogTitle, "Add Client Profile" }
+            { "ClientProfile", new ClientProfile() },
+            { "DialogTitle", "Add Client Profile" }
         };
 
         var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Add Client", parameters);
@@ -75,20 +96,20 @@ public partial class ClientProfileManagement : ComponentBase
     /// </summary>
     private async Task EditClientAsync(ClientProfile client)
     {
-        // Create a copy to avoid editing list item before save
         var editableCopy = new ClientProfile
         {
             Id = client.Id,
             Name = client.Name,
             Code = client.Code,
             IsActive = client.IsActive,
-            Notes = client.Notes
+            Notes = client.Notes,
+            Projects = client.Projects?.ToList() ?? new List<ProjectDetail>()
         };
 
-        var parameters = new DialogParameters<ClientProfileManagementDialog>
+        var parameters = new DialogParameters
         {
-            { x => x.ClientProfile, editableCopy },
-            { x => x.DialogTitle, "Edit Client Profile" }
+            { "ClientProfile", editableCopy },
+            { "DialogTitle", "Edit Client Profile" }
         };
 
         var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Edit Client", parameters);
