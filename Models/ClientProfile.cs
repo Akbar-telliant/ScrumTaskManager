@@ -35,12 +35,6 @@ public class ClientProfile
     public bool IsActive { get; set; } = true;
 
     /// <summary>
-    /// Default team size for the client.
-    /// </summary>
-    [Range(0, 1000, ErrorMessage = "0–1000 allowed")]
-    public int? DefaultTeamSize { get; set; }
-
-    /// <summary>
     /// Additional notes.
     /// </summary>
     [StringLength(500, ErrorMessage = "Max 500 characters")]

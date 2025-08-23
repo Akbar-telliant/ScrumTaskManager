@@ -82,7 +82,6 @@ public partial class ClientProfileManagement : ComponentBase
             Name = client.Name,
             Code = client.Code,
             IsActive = client.IsActive,
-            DefaultTeamSize = client.DefaultTeamSize,
             Notes = client.Notes
         };
 
