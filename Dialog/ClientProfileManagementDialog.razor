@@ -24,13 +24,6 @@
                          @bind-Checked="ClientProfile.IsActive"
                          Label="Active" />
 
-            <MudNumericField T="int?"
-                             @bind-Value="ClientProfile.DefaultTeamSize"
-                             Label="Default Team Size"
-                             Min="0"
-                             Max="1000"
-                             For="@(() => ClientProfile.DefaultTeamSize)" />
-
             <MudTextField T="string"
                           @bind-Value="ClientProfile.Notes"
                           Label="Notes"
