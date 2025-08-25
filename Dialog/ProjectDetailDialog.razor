@@ -21,6 +21,13 @@
                           Lines="3"
                           For="@(() => ProjectDetail.Description)" />
 
+            <MudNumericField T="int"
+                             @bind-Value="ProjectDetail.DefaultTeamSize"
+                             Label="Default Team Size"
+                             Min="1"
+                             Max="100"
+                             For="@(() => ProjectDetail.DefaultTeamSize)" />
+
             <MudDatePicker @bind-Date="ProjectDetail.StartDate"
                            Label="Start Date"
                            For="@(() => ProjectDetail.StartDate)" />

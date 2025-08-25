@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using ScrumMaster.Dialog;
 using ScrumMaster.Models;
 using ScrumMaster.Services;
@@ -24,20 +23,17 @@ public partial class ClientProfileManagement : ComponentBase
     /// <summary>
     /// Service for performing CRUD operations on <see cref="ClientProfile"/> entities.
     /// </summary>
-    [Inject]
-    private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
+    [Inject] private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
 
     /// <summary>
     /// Provides dialog functionality for displaying modal dialogs.
     /// </summary>
-    [Inject]
-    private IDialogService DialogService { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
 
     /// <summary>
     /// Service for displaying toast-style notification messages.
     /// </summary>
-    [Inject]
-    private ISnackbar Snackbar { get; set; } = default!;
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
 
     /// <summary>
     /// On page load → fetch all clients.
@@ -58,7 +54,6 @@ public partial class ClientProfileManagement : ComponentBase
     /// <summary>
     /// Toggle display of project subgrid for a given client.
     /// </summary>
-    /// <param name="clientId">ID of the client to toggle.</param>
     private void ToggleProjects(int clientId)
     {
         if (ExpandedClients.Contains(clientId))
