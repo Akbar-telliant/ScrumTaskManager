@@ -9,19 +9,9 @@ namespace ScrumMaster.Services;
 /// </summary>
 public class EntityDataService<T> where T : class
 {
-    /// <summary>
-    /// Database context instance.
-    /// </summary>
     private readonly ScrumMasterDbContext _context;
-
-    /// <summary>
-    /// EF Core DbSet for the entity type.
-    /// </summary>
     private readonly DbSet<T> _dbSet;
 
-    /// <summary>
-    /// Initializes the service with the given DbContext.
-    /// </summary>
     public EntityDataService(ScrumMasterDbContext context)
     {
         _context = context;
@@ -44,6 +34,21 @@ public class EntityDataService<T> where T : class
     public async Task<List<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
+
+        foreach (var includeProperty in includeProperties)
+            query = query.Include(includeProperty);
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets entities matching a condition, with optional navigation property includes.
+    /// </summary>
+    public async Task<List<T>> GetByConditionAsync(
+        Expression<Func<T, bool>> predicate,
+        params Expression<Func<T, object>>[] includeProperties)
+    {
+        IQueryable<T> query = _dbSet.AsNoTracking().Where(predicate);
 
         foreach (var includeProperty in includeProperties)
             query = query.Include(includeProperty);
