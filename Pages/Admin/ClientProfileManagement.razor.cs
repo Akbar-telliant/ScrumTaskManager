@@ -10,61 +10,36 @@ namespace ScrumMaster.Pages.Admin;
 /// </summary>
 public partial class ClientProfileManagement : ComponentBase
 {
-    /// <summary>
-    /// Local list of client profiles.
-    /// </summary>
     private List<ClientProfile> clients = new();
-
-    /// <summary>
-    /// Tracks expanded clients to show/hide project subgrid.
-    /// </summary>
     private HashSet<int> ExpandedClients = new();
 
-    /// <summary>
-    /// Service for performing CRUD operations on <see cref="ClientProfile"/> entities.
-    /// </summary>
     [Inject] private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
-
-    /// <summary>
-    /// Provides dialog functionality for displaying modal dialogs.
-    /// </summary>
+    [Inject] private EntityDataService<ProjectDetail> ProjectService { get; set; } = default!;
     [Inject] private IDialogService DialogService { get; set; } = default!;
-
-    /// <summary>
-    /// Service for displaying toast-style notification messages.
-    /// </summary>
     [Inject] private ISnackbar Snackbar { get; set; } = default!;
 
-    /// <summary>
-    /// On page load → fetch all clients.
-    /// </summary>
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadClientsAsync();
-    }
+    protected override async Task OnInitializedAsync() => await LoadClientsAsync();
 
     /// <summary>
-    /// Fetch clients from service.
+    /// Fetch clients and their projects from service.
     /// </summary>
     private async Task LoadClientsAsync()
     {
         clients = await ClientService.GetAllAsync();
+
+        foreach (var client in clients)
+        {
+            var projects = await ProjectService.GetByConditionAsync(p => p.ClientId == client.Id);
+            client.Projects = projects ?? new List<ProjectDetail>();
+        }
     }
 
-    /// <summary>
-    /// Toggle display of project subgrid for a given client.
-    /// </summary>
     private void ToggleProjects(int clientId)
     {
-        if (ExpandedClients.Contains(clientId))
+        if (!ExpandedClients.Add(clientId))
             ExpandedClients.Remove(clientId);
-        else
-            ExpandedClients.Add(clientId);
     }
 
-    /// <summary>
-    /// Open dialog to add new client.
-    /// </summary>
     private async Task AddClientAsync()
     {
         var parameters = new DialogParameters
@@ -83,9 +58,6 @@ public partial class ClientProfileManagement : ComponentBase
         }
     }
 
-    /// <summary>
-    /// Open dialog to edit an existing client.
-    /// </summary>
     private async Task EditClientAsync(ClientProfile client)
     {
         var editableCopy = new ClientProfile
@@ -114,9 +86,6 @@ public partial class ClientProfileManagement : ComponentBase
         }
     }
 
-    /// <summary>
-    /// Confirm and delete a client.
-    /// </summary>
     private async Task DeleteClientAsync(ClientProfile client)
     {
         bool? confirmed = await DialogService.ShowMessageBox(
@@ -134,14 +103,17 @@ public partial class ClientProfileManagement : ComponentBase
     }
 
     /// <summary>
-    /// Open dialog to add new project for a client.
+    /// 
     /// </summary>
+    /// <param name="client"></param>
+    /// <returns></returns>
     private async Task AddProjectAsync(ClientProfile client)
     {
         var newProject = new ProjectDetail
         {
             ClientId = client.Id,
-            StartDate = DateTime.Now
+            StartDate = DateTime.Now,
+            DefaultTeamSize = 5 // ✅ default TeamSize (adjust as needed)
         };
 
         var parameters = new DialogParameters
