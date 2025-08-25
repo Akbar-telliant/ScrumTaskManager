@@ -2,8 +2,6 @@
 
 @using MudBlazor
 @using ScrumMaster.Models
-@using ScrumMaster.Dialog
-@using ScrumMaster.Services
 
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
@@ -61,20 +59,29 @@
                 @if (ExpandedClients.Contains(client.Id) && client.Projects?.Any() == true)
                 {
                     <MudPaper Class="pa-3 my-2" Elevation="1">
-                        <MudTable Items="client.Projects" Dense="true" Hover="true" Striped="true">
+                        <MudTable Items="@client.Projects" Dense="true" Hover="true" Striped="true">
                             <HeaderContent>
                                 <MudTh>Project Name</MudTh>
                                 <MudTh>Description</MudTh>
                                 <MudTh>Team Size</MudTh>
                                 <MudTh>Start Date</MudTh>
                                 <MudTh>End Date</MudTh>
+                                <MudTh>Actions</MudTh>
                             </HeaderContent>
+
                             <RowTemplate Context="project">
                                 <MudTd>@project.Name</MudTd>
                                 <MudTd>@project.Description</MudTd>
                                 <MudTd>@project.DefaultTeamSize</MudTd>
                                 <MudTd>@project.StartDate?.ToShortDateString()</MudTd>
                                 <MudTd>@(project.EndDate?.ToShortDateString() ?? "-")</MudTd>
+                                <MudTd>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => EditProjectAsync(project))">Edit</MudButton>
+
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteProjectAsync(project))">Delete</MudButton>
+                                </MudTd>
                             </RowTemplate>
                         </MudTable>
                     </MudPaper>
