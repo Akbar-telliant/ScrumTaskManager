@@ -19,14 +19,14 @@ namespace ScrumMaster.Models
         /// </summary>
         [Required]
         [StringLength(250)]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
         /// Email.
         /// </summary>
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Role of the user.
