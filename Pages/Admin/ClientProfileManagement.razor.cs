@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using ScrumMaster.Dialog;
 using ScrumMaster.Models;
 using ScrumMaster.Services;
@@ -61,13 +62,9 @@ public partial class ClientProfileManagement : ComponentBase
     private void ToggleProjects(int clientId)
     {
         if (ExpandedClients.Contains(clientId))
-        {
             ExpandedClients.Remove(clientId);
-        }
         else
-        {
             ExpandedClients.Add(clientId);
-        }
     }
 
     /// <summary>
@@ -138,6 +135,33 @@ public partial class ClientProfileManagement : ComponentBase
             await ClientService.DeleteAsync(client.Id);
             await LoadClientsAsync();
             Snackbar.Add("Client profile deleted successfully!", Severity.Error);
+        }
+    }
+
+    /// <summary>
+    /// Open dialog to add new project for a client.
+    /// </summary>
+    private async Task AddProjectAsync(ClientProfile client)
+    {
+        var newProject = new ProjectDetail
+        {
+            ClientId = client.Id,
+            StartDate = DateTime.Now
+        };
+
+        var parameters = new DialogParameters
+        {
+            { "ProjectDetail", newProject },
+            { "DialogTitle", $"Add Project for {client.Name}" }
+        };
+
+        var dialog = await DialogService.ShowAsync<ProjectDetailDialog>("Add Project", parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            await LoadClientsAsync();
+            Snackbar.Add("Project added successfully!", Severity.Success);
         }
     }
 }
