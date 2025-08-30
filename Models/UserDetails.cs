@@ -48,10 +48,19 @@ public class UserDetails
     [DataType(DataType.DateTime)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserDetails"/> class.
+    /// </summary>
     public UserDetails()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserDetails"/> class with specified values.
+    /// </summary>
+    /// <param name="name">The user's name.</param>
+    /// <param name="email">The user's email address.</param>
+    /// <param name="role">The user's role.</param>
     public UserDetails(string name, string email, TUserRole role)
     {
         UserName = name;

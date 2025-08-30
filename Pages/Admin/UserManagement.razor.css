@@ -1,1 +1,11 @@
-﻿
+﻿.add-btn {
+    width: 40px !important;
+}
+
+.mud-table {
+    font-size: 0.9rem;
+}
+
+.mud-chip {
+    font-weight: bold;
+}

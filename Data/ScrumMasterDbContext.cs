@@ -28,6 +28,11 @@ public class ScrumMasterDbContext : DbContext
     public DbSet<ProjectDetails> ProjectDetail { get; set; } = null!;
 
     /// <summary>
+    /// Table for user detailes.
+    /// </summary>
+    public DbSet<UserDetails> UserDetail { get; set; } = null!;
+
+    /// <summary>
     /// Configure entity relationships.
     /// </summary>
     /// <param name="modelBuilder"> EF model builder. </param>
