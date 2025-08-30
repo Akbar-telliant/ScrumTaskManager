@@ -30,7 +30,7 @@ public partial class ClientProfileManagement : ComponentBase
     /// Service for performing CRUD operations on project details.
     /// </summary>
     [Inject]
-    private EntityDataService<ProjectDetail> ProjectService { get; set; } = default!;
+    private EntityDataService<ProjectDetails> ProjectService { get; set; } = default!;
 
     /// <summary>
     /// Provides dialog services for opening modals.
@@ -60,7 +60,7 @@ public partial class ClientProfileManagement : ComponentBase
         foreach (var client in clients)
         {
             var projects = await ProjectService.GetByConditionAsync(p => p.ClientId == client.Id);
-            client.Projects = projects ?? new List<ProjectDetail>();
+            client.Projects = projects ?? new List<ProjectDetails>();
         }
     }
 
@@ -110,7 +110,7 @@ public partial class ClientProfileManagement : ComponentBase
             Code = client.Code,
             IsActive = client.IsActive,
             Notes = client.Notes,
-            Projects = client.Projects?.ToList() ?? new List<ProjectDetail>()
+            Projects = client.Projects?.ToList() ?? new List<ProjectDetails>()
         };
 
         var parameters = new DialogParameters
@@ -157,7 +157,7 @@ public partial class ClientProfileManagement : ComponentBase
     /// <returns>A task representing the asynchronous add operation.</returns>
     private async Task AddProjectAsync(ClientProfile client)
     {
-        var newProject = new ProjectDetail
+        var newProject = new ProjectDetails
         {
             ClientId = client.Id,
             StartDate = DateTime.Now,
@@ -185,9 +185,9 @@ public partial class ClientProfileManagement : ComponentBase
     /// </summary>
     /// <param name="project">The project to edit.</param>
     /// <returns>A task representing the asynchronous edit operation.</returns>
-    private async Task EditProjectAsync(ProjectDetail project)
+    private async Task EditProjectAsync(ProjectDetails project)
     {
-        var editableCopy = new ProjectDetail
+        var editableCopy = new ProjectDetails
         {
             Id = project.Id,
             ClientId = project.ClientId,
@@ -219,7 +219,7 @@ public partial class ClientProfileManagement : ComponentBase
     /// </summary>
     /// <param name="project">The project to delete.</param>
     /// <returns>A task representing the asynchronous delete operation.</returns>
-    private async Task DeleteProjectAsync(ProjectDetail project)
+    private async Task DeleteProjectAsync(ProjectDetails project)
     {
         bool? confirmed = await DialogService.ShowMessageBox(
             "Confirm Delete",

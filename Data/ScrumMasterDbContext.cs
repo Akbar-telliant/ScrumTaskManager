@@ -25,7 +25,7 @@ public class ScrumMasterDbContext : DbContext
     /// <summary>
     /// Table for project detailes.
     /// </summary>
-    public DbSet<ProjectDetail> ProjectDetail { get; set; } = null!;
+    public DbSet<ProjectDetails> ProjectDetail { get; set; } = null!;
 
     /// <summary>
     /// Configure entity relationships.

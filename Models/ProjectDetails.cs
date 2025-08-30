@@ -6,7 +6,7 @@ namespace ScrumMaster.Models;
 /// <summary>
 /// Project details for a client.
 /// </summary>
-public class ProjectDetail
+public class ProjectDetails
 {
     /// <summary>
     /// Auto-generated primary key.
