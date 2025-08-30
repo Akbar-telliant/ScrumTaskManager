@@ -20,7 +20,7 @@ public class UserDetails
     /// Unique identifier for the user.
     /// </summary>
     [Key]
-    public int UserId { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// User Name.

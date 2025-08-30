@@ -55,10 +55,10 @@ public partial class UserManagement : ComponentBase
     private async Task AddUserAsync()
     {
         var parameters = new DialogParameters
-        {
-            { "UserDetail", new UserDetails() },
-            { "DialogTitle", "Add User" }
-        };
+    {
+        { "User", new UserDetails() },   // ✅ must match the dialog property name
+        { "DialogTitle", "Add User" }
+    };
 
         var dialog = await DialogService.ShowAsync<UserManagementDialog>("Add User", parameters);
         var result = await dialog.Result;
@@ -79,7 +79,7 @@ public partial class UserManagement : ComponentBase
     {
         var editableCopy = new UserDetails
         {
-            UserId = user.UserId,
+            Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
             Role = user.Role,
@@ -87,10 +87,10 @@ public partial class UserManagement : ComponentBase
         };
 
         var parameters = new DialogParameters
-        {
-            { "UserDetail", editableCopy },
-            { "DialogTitle", "Edit User" }
-        };
+    {
+        { "User", editableCopy },   // ✅ match with dialog property
+        { "DialogTitle", "Edit User" }
+    };
 
         var dialog = await DialogService.ShowAsync<UserManagementDialog>("Edit User", parameters);
         var result = await dialog.Result;
@@ -117,7 +117,7 @@ public partial class UserManagement : ComponentBase
 
         if (confirmed == true)
         {
-            await UserService.DeleteAsync(user.UserId);
+            await UserService.DeleteAsync(user.Id);
             await LoadUsersAsync();
             Snackbar.Add("User deleted successfully!", Severity.Error);
         }
