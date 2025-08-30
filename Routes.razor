@@ -1,14 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 
+<!-- Router handles navigation and route mapping -->
 <Router AppAssembly="@typeof(Program).Assembly">
+
+    <!-- If a matching route is found -->
     <Found Context="routeData">
+        <!-- Render the page inside the default MainLayout -->
         <RouteView RouteData="@routeData" DefaultLayout="typeof(Pages.Shared.MainLayout)" />
     </Found>
+
+    <!-- If no matching route is found -->
     <NotFound>
-            <PageTitle>Not found</PageTitle>
+        <!-- Title for the browser tab -->
+        <PageTitle>Not found</PageTitle>
+
+        <!-- Show message inside MainLayout -->
         <LayoutView Layout="@typeof(Pages.Shared.MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+
 </Router>

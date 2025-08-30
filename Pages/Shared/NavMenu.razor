@@ -1,12 +1,18 @@
-﻿@using MudBlazor
+﻿<!-- Import MudBlazor components -->
+@using MudBlazor
 
+<!-- Sidebar navigation menu -->
 <MudPaper Width="250px" Class="py-3" Elevation="0">
-    <MudNavMenu>       
+    <MudNavMenu>
+        <!-- Home link -->
         <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+
+        <!-- User Management link -->
         <MudNavLink Href="/admin/user-management" Icon="@Icons.Material.Filled.VerifiedUser">User Management</MudNavLink>
+
+        <!-- Client Profiles link -->
         <MudNavLink Href="/admin/client-config" Icon="@Icons.Material.Filled.SupervisedUserCircle">Client Profiles</MudNavLink>
 
         <!-- Add more links here if needed -->
-
     </MudNavMenu>
 </MudPaper>

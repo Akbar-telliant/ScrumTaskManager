@@ -20,22 +20,22 @@ public class ScrumMasterDbContext : DbContext
     /// <summary>
     /// Table for client profiles.
     /// </summary>
-    public DbSet<ClientProfile> ClientProfile { get; set; }
+    public DbSet<ClientProfile> m_ClientProfile { get; set; } = null!;
 
     /// <summary>
-    /// Table for project detailes.
+    /// Table for project details.
     /// </summary>
-    public DbSet<ProjectDetails> ProjectDetail { get; set; } = null!;
+    public DbSet<ProjectDetails> m_ProjectDetail { get; set; } = null!;
 
     /// <summary>
-    /// Table for user detailes.
+    /// Table for user details.
     /// </summary>
-    public DbSet<UserDetails> UserDetail { get; set; } = null!;
+    public DbSet<UserDetails> m_UserDetail { get; set; } = null!;
 
     /// <summary>
     /// Configure entity relationships.
     /// </summary>
-    /// <param name="modelBuilder"> EF model builder. </param>
+    /// <param name="modelBuilder">EF model builder.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

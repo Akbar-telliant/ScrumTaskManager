@@ -4,25 +4,49 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
+    <meta charset="utf-8" /> <!-- Define character encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsive layout on mobile -->
+    <base href="/" /> <!-- Base path for relative URLs -->
+    <!-- MudBlazor CSS -->
     <link href=@Assets["_content/MudBlazor/MudBlazor.min.css"] rel="stylesheet" />
+
+    <!-- MudBlazor Extensions CSS -->
     <link href=@Assets["_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css"] rel="stylesheet" />
+
+    <!-- Material Symbols (MudBlazor Icons) -->
     <link href=@Assets["_content/MudBlazor.FontIcons.MaterialSymbols/css/font.min.css"] rel="stylesheet" />
+
+    <!-- App-specific CSS -->
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["ScrumMaster.styles.css"]" />
+
+    <!-- ImportMap for script/module resolution -->
     <ImportMap />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- Blazor HeadOutlet for injecting components/scripts into head -->
     <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 </head>
 
 <body>
+    <!-- Defines routing for Blazor components -->
     <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+
+    <!-- Blazor WebAssembly/Server runtime -->
     <script src="_framework/blazor.web.js"></script>
+
+    <!-- Application bundled JavaScript -->
     <script src=@Assets["scripts/bundle.js"]></script>
+
+    <!-- MudBlazor JavaScript -->
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+
+    <!-- Custom Navigation Observer for MudBlazor Extensions -->
     <script src=@Assets["_content/Extensions.MudBlazor.StaticInput/NavigationObserver.js"]></script>
+
+    <!-- MudBlazor Extensions JavaScript -->
     <script src=@Assets["_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"]></script>
 </body>
 

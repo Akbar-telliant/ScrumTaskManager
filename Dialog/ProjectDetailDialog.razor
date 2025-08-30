@@ -2,25 +2,32 @@
 @using MudBlazor
 @using ScrumMaster.Models
 
+<!-- EditForm binds to ProjectDetail model and runs OnValidSubmitAsync when valid -->
 <EditForm Model="@ProjectDetail" OnValidSubmit="OnValidSubmitAsync">
+    <!-- Enables model validation via DataAnnotations -->
     <DataAnnotationsValidator />
 
+    <!-- Main dialog container -->
     <MudDialog Style="width:500px;">
         <DialogContent>
+            <!-- Dialog title -->
             <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
+            <!-- Project Name (required field) -->
             <MudTextField T="string"
                           @bind-Value="ProjectDetail.Name"
                           Label="Project Name"
                           Required="true"
                           For="@(() => ProjectDetail.Name)" />
 
+            <!-- Project Description (multiline input) -->
             <MudTextField T="string"
                           @bind-Value="ProjectDetail.Description"
                           Label="Description"
                           Lines="3"
                           For="@(() => ProjectDetail.Description)" />
 
+            <!-- Default team size with numeric validation -->
             <MudNumericField T="int"
                              @bind-Value="ProjectDetail.DefaultTeamSize"
                              Label="Default Team Size"
@@ -28,26 +35,31 @@
                              Max="100"
                              For="@(() => ProjectDetail.DefaultTeamSize)" />
 
+            <!-- Start date picker -->
             <MudDatePicker @bind-Date="ProjectDetail.StartDate"
                            Label="Start Date"
                            For="@(() => ProjectDetail.StartDate)" />
 
+            <!-- End date picker -->
             <MudDatePicker @bind-Date="ProjectDetail.EndDate"
                            Label="End Date"
                            For="@(() => ProjectDetail.EndDate)" />
 
+            <!-- Checkbox for project active/inactive status -->
             <MudCheckBox T="bool"
                          @bind-Checked="ProjectDetail.IsActive"
                          Label="Active" />
-
         </DialogContent>
 
         <DialogActions>
+            <!-- Cancel button closes dialog without saving -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Outlined"
                        OnClick="Cancel">
                 Cancel
             </MudButton>
+
+            <!-- Save button submits form -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Filled"
                        ButtonType="ButtonType.Submit">

@@ -5,9 +5,11 @@
 
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
+        <!-- Page title and description -->
         <MudText Typo="Typo.h4" Color="Color.Primary">Client Profiles</MudText>
         <MudText Typo="Typo.subtitle1">Manage client details and settings.</MudText>
 
+        <!-- Add new client button -->
         <MudIconButton Class="add-btn"
                        Size="Size.Small"
                        Color="Color.Primary"
@@ -15,8 +17,10 @@
                        Icon="@Icons.Material.Rounded.Add"
                        OnClick="AddClientAsync" />
 
-        <MudTable Items="@clients" Hover="true" Striped="true" Dense="true">
+        <!-- Main clients table -->
+        <MudTable Items="@m_clients" Hover="true" Striped="true" Dense="true">
             <HeaderContent>
+                <!-- Table header columns -->
                 <MudTh>Name</MudTh>
                 <MudTh>Code</MudTh>
                 <MudTh>Active</MudTh>
@@ -25,9 +29,11 @@
             </HeaderContent>
 
             <RowTemplate Context="client">
+                <!-- Display client row -->
                 <MudTd>@client.Name</MudTd>
                 <MudTd>@client.Code</MudTd>
                 <MudTd>
+                    <!-- Active status chip -->
                     <MudChip T="string"
                              Color="@(@client.IsActive ? Color.Success : Color.Error)"
                              Variant="Variant.Filled">
@@ -36,6 +42,7 @@
                 </MudTd>
                 <MudTd>@client.Notes</MudTd>
                 <MudTd>
+                    <!-- Row action buttons: Edit, Delete, Add Project, Show/Hide Projects -->
                     <MudButton Variant="Variant.Text" Color="Color.Primary"
                                OnClick="@(() => EditClientAsync(client))">Edit</MudButton>
 
@@ -49,18 +56,20 @@
                     {
                         <MudButton Variant="Variant.Text" Color="Color.Secondary"
                                    OnClick="@(() => ToggleProjects(client.Id))">
-                            @(ExpandedClients.Contains(client.Id) ? "Hide Projects" : "Show Projects")
+                            @(m_ExpandedClients.Contains(client.Id) ? "Hide Projects" : "Show Projects")
                         </MudButton>
                     }
                 </MudTd>
             </RowTemplate>
 
             <ChildRowContent Context="client">
-                @if (ExpandedClients.Contains(client.Id) && client.Projects?.Any() == true)
+                <!-- Expanded child table for projects under each client -->
+                @if (m_ExpandedClients.Contains(client.Id) && client.Projects?.Any() == true)
                 {
                     <MudPaper Class="pa-3 my-2" Elevation="1">
                         <MudTable Items="@client.Projects" Dense="true" Hover="true" Striped="true">
                             <HeaderContent>
+                                <!-- Project table headers -->
                                 <MudTh>Project Name</MudTh>
                                 <MudTh>Description</MudTh>
                                 <MudTh>Team Size</MudTh>
@@ -70,12 +79,14 @@
                             </HeaderContent>
 
                             <RowTemplate Context="project">
+                                <!-- Project row data -->
                                 <MudTd>@project.Name</MudTd>
                                 <MudTd>@project.Description</MudTd>
                                 <MudTd>@project.DefaultTeamSize</MudTd>
                                 <MudTd>@project.StartDate?.ToShortDateString()</MudTd>
                                 <MudTd>@(project.EndDate?.ToShortDateString() ?? "-")</MudTd>
                                 <MudTd>
+                                    <!-- Project action buttons: Edit, Delete -->
                                     <MudButton Variant="Variant.Text" Color="Color.Primary"
                                                OnClick="@(() => EditProjectAsync(project))">Edit</MudButton>
 
@@ -88,6 +99,7 @@
                 }
             </ChildRowContent>
 
+            <!-- Pager for navigating client list -->
             <PagerContent>
                 <MudTablePager />
             </PagerContent>

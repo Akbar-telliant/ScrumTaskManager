@@ -3,41 +3,52 @@
 @using ScrumMaster.Models
 @using static ScrumMaster.Models.UserDetails
 
+<!-- EditForm binds to user model and triggers OnValidSubmitAsync on form submit -->
 <EditForm Model="@User" OnValidSubmit="OnValidSubmitAsync">
+    <!-- Enables validation using data annotations in user model -->
     <DataAnnotationsValidator />
 
+    <!-- Main dialog container for the user form -->
     <MudDialog Style="width:450px;">
         <DialogContent>
+            <!-- Dialog title (Add or Edit User) -->
             <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
+            <!-- User Name field (required) -->
             <MudTextField T="string"
                           @bind-Value="User.UserName"
-                          Label="User Name"
+                          Label="m_User Name"
                           Required="true"
                           For="@(() => User.UserName)" />
 
+            <!-- Email field (required) -->
             <MudTextField T="string"
                           @bind-Value="User.Email"
                           Label="Email"
                           Required="true"
                           For="@(() => User.Email)" />
 
+            <!-- User role dropdown (Admin/User) -->
             <MudSelect T="TUserRole"
                        @bind-Value="User.Role"
                        Label="Role"
                        Required="true"
                        For="@(() => User.Role)">
+                <!-- Role options -->
                 <MudSelectItem Value="TUserRole.Admin">Admin</MudSelectItem>
-                <MudSelectItem Value="TUserRole.User">User</MudSelectItem>
+                <MudSelectItem Value="TUserRole.User">m_User</MudSelectItem>
             </MudSelect>
         </DialogContent>
 
         <DialogActions>
+            <!-- Cancel button closes dialog without saving -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Outlined"
                        OnClick="Cancel">
                 Cancel
             </MudButton>
+
+            <!-- Save button submits form and triggers OnValidSubmitAsync -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Filled"
                        ButtonType="ButtonType.Submit">
