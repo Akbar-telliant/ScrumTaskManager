@@ -1,28 +1,48 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
 @using ScrumMaster.Models
-@using static ScrumMaster.Models.Users
+@using static ScrumMaster.Models.UserDetails
 
-<EditForm Model="@Users" OnValidSubmit="OnValidSubmitAsync">
+<EditForm Model="@User" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator />
+
     <MudDialog Style="width:450px;">
-      <TitleContent>
-        <MudText Typo="Typo.subtitle1">
-           User Add/Edit
-        </MudText>
-      </TitleContent>
-      <DialogContent>
-         <MudTextField Label="First name" @bind-Value="Users!.UserName" For="@(() => Users!.UserName)" />
-         <MudTextField Label="Email" @bind-Value="Users!.Email" For="@(() => Users.Email)" />
-             <MudSpacer  />
-            <MudSelect T="TUserRole" @bind-Value="Users!.Role">
-             <MudSelectItem Value="Users.TUserRole.Admin" />
-             <MudSelectItem Value="Users.TUserRole.User" />                
-         </MudSelect>
-      </DialogContent>
-      <DialogActions>
-            <MudButton OnClick="@(() => MudDialog?.Cancel())">Close</MudButton>
-            <MudButton ButtonType="ButtonType.Submit">Add</MudButton>
-      </DialogActions>
-      </MudDialog>
+        <DialogContent>
+            <MudText Typo="Typo.h6">@DialogTitle</MudText>
+
+            <MudTextField T="string"
+                          @bind-Value="User.UserName"
+                          Label="User Name"
+                          Required="true"
+                          For="@(() => User.UserName)" />
+
+            <MudTextField T="string"
+                          @bind-Value="User.Email"
+                          Label="Email"
+                          Required="true"
+                          For="@(() => User.Email)" />
+
+            <MudSelect T="TUserRole"
+                       @bind-Value="User.Role"
+                       Label="Role"
+                       Required="true"
+                       For="@(() => User.Role)">
+                <MudSelectItem Value="TUserRole.Admin">Admin</MudSelectItem>
+                <MudSelectItem Value="TUserRole.User">User</MudSelectItem>
+            </MudSelect>
+        </DialogContent>
+
+        <DialogActions>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Outlined"
+                       OnClick="Cancel">
+                Cancel
+            </MudButton>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       ButtonType="ButtonType.Submit">
+                Save
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
 </EditForm>
