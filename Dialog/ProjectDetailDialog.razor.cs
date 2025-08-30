@@ -19,7 +19,7 @@ public partial class ProjectDetailDialog
     /// Project detail model (passed in from parent).
     /// </summary>
     [Parameter]
-    public ProjectDetail ProjectDetail { get; set; } = new();
+    public ProjectDetails ProjectDetail { get; set; } = new();
 
     /// <summary>
     /// Dialog header text.
@@ -31,7 +31,7 @@ public partial class ProjectDetailDialog
     /// Entity data service for ProjectDetail CRUD.
     /// </summary>
     [Inject]
-    private EntityDataService<ProjectDetail> ProjectService { get; set; } = default!;
+    private EntityDataService<ProjectDetails> ProjectService { get; set; } = default!;
 
     /// <summary>
     /// Handles form submission.

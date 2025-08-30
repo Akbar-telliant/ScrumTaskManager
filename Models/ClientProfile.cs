@@ -43,5 +43,5 @@ public class ClientProfile
     /// <summary>
     /// Navigation property: projects under this client.
     /// </summary>
-    public List<ProjectDetail> Projects { get; set; } = new();
+    public List<ProjectDetails> Projects { get; set; } = new();
 }
