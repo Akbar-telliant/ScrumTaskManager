@@ -2,28 +2,36 @@
 @using MudBlazor
 @using ScrumMaster.Models
 
+<!-- EditForm binds to the m_ClientProfile model and handles form submission -->
 <EditForm Model="@ClientProfile" OnValidSubmit="OnValidSubmitAsync">
+    <!-- Enables validation using DataAnnotations attributes from the model -->
     <DataAnnotationsValidator />
 
+    <!-- Main dialog container -->
     <MudDialog Style="width:450px;">
         <DialogContent>
+            <!-- Dialog title -->
             <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
+            <!-- Text field for client name (required field) -->
             <MudTextField T="string"
                           @bind-Value="ClientProfile.Name"
                           Label="Client Name"
                           Required="true"
                           For="@(() => ClientProfile.Name)" />
 
+            <!-- Text field for client code -->
             <MudTextField T="string"
                           @bind-Value="ClientProfile.Code"
                           Label="Client Code"
                           For="@(() => ClientProfile.Code)" />
 
+            <!-- Checkbox to mark client as active or inactive -->
             <MudCheckBox T="bool"
                          @bind-Checked="ClientProfile.IsActive"
                          Label="Active" />
 
+            <!-- Multiline text field for client notes -->
             <MudTextField T="string"
                           @bind-Value="ClientProfile.Notes"
                           Label="Notes"
@@ -32,11 +40,14 @@
         </DialogContent>
 
         <DialogActions>
+            <!-- Cancel button closes the dialog without saving -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Outlined"
                        OnClick="Cancel">
                 Cancel
             </MudButton>
+
+            <!-- Save button submits the form -->
             <MudButton Color="Color.Primary"
                        Variant="Variant.Filled"
                        ButtonType="ButtonType.Submit">

@@ -13,25 +13,25 @@ public partial class UserManagement : ComponentBase
     /// <summary>
     /// List of users currently loaded.
     /// </summary>
-    private List<UserDetails> users = new();
+    private List<UserDetails> m_users = new();
 
     /// <summary>
     /// Service for performing CRUD operations on users.
     /// </summary>
     [Inject] 
-    private EntityDataService<UserDetails> UserService { get; set; } = default!;
+    private EntityDataService<UserDetails> m_UserService { get; set; } = default!;
 
     /// <summary>
     /// Dialog service for showing modals.
     /// </summary>
     [Inject] 
-    private IDialogService DialogService { get; set; } = default!;
+    private IDialogService m_DialogService { get; set; } = default!;
 
     /// <summary>
     /// Snackbar service for showing notifications.
     /// </summary>
     [Inject] 
-    private ISnackbar Snackbar { get; set; } = default!;
+    private ISnackbar m_Snackbar { get; set; } = default!;
 
     /// <summary>
     /// Initializes the component by loading users.
@@ -45,7 +45,7 @@ public partial class UserManagement : ComponentBase
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task LoadUsersAsync()
     {
-        users = await UserService.GetAllAsync();
+        m_users = await m_UserService.GetAllAsync();
     }
 
     /// <summary>
@@ -60,13 +60,13 @@ public partial class UserManagement : ComponentBase
         { "DialogTitle", "Add User" }
     };
 
-        var dialog = await DialogService.ShowAsync<UserManagementDialog>("Add User", parameters);
+        var dialog = await m_DialogService.ShowAsync<UserManagementDialog>("Add User", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadUsersAsync();
-            Snackbar.Add("User added successfully!", Severity.Success);
+            m_Snackbar.Add("User added successfully!", Severity.Success);
         }
     }
 
@@ -92,13 +92,13 @@ public partial class UserManagement : ComponentBase
         { "DialogTitle", "Edit User" }
     };
 
-        var dialog = await DialogService.ShowAsync<UserManagementDialog>("Edit User", parameters);
+        var dialog = await m_DialogService.ShowAsync<UserManagementDialog>("Edit User", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadUsersAsync();
-            Snackbar.Add("User updated successfully!", Severity.Info);
+            m_Snackbar.Add("User updated successfully!", Severity.Info);
         }
     }
 
@@ -109,7 +109,7 @@ public partial class UserManagement : ComponentBase
     /// <returns>A task representing the asynchronous delete operation.</returns>
     private async Task DeleteUserAsync(UserDetails user)
     {
-        bool? confirmed = await DialogService.ShowMessageBox(
+        bool? confirmed = await m_DialogService.ShowMessageBox(
             "Confirm Delete",
             $"Are you sure you want to delete user '{user.UserName}'?",
             yesText: "Delete",
@@ -117,9 +117,9 @@ public partial class UserManagement : ComponentBase
 
         if (confirmed == true)
         {
-            await UserService.DeleteAsync(user.Id);
+            await m_UserService.DeleteAsync(user.Id);
             await LoadUsersAsync();
-            Snackbar.Add("User deleted successfully!", Severity.Error);
+            m_Snackbar.Add("User deleted successfully!", Severity.Error);
         }
     }
 }

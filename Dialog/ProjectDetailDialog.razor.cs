@@ -13,7 +13,7 @@ public partial class ProjectDetailDialog
     /// Dialog instance reference.
     /// </summary>
     [CascadingParameter]
-    private IMudDialogInstance? MudDialog { get; set; }
+    private IMudDialogInstance? m_MudDialog { get; set; }
 
     /// <summary>
     /// Project detail model (passed in from parent).
@@ -31,7 +31,7 @@ public partial class ProjectDetailDialog
     /// Entity data service for ProjectDetail CRUD.
     /// </summary>
     [Inject]
-    private EntityDataService<ProjectDetails> ProjectService { get; set; } = default!;
+    private EntityDataService<ProjectDetails> m_ProjectService { get; set; } = default!;
 
     /// <summary>
     /// Handles form submission.
@@ -40,18 +40,18 @@ public partial class ProjectDetailDialog
     {
         if (ProjectDetail.Id == 0)
         {
-            await ProjectService.AddAsync(ProjectDetail); // New entity → Add
+            await m_ProjectService.AddAsync(ProjectDetail); // New entity → Add
         }
         else
         {
-            await ProjectService.UpdateAsync(ProjectDetail); // Existing entity → Update
+            await m_ProjectService.UpdateAsync(ProjectDetail); // Existing entity → Update
         }
 
-        MudDialog?.Close(DialogResult.Ok(ProjectDetail));
+        m_MudDialog?.Close(DialogResult.Ok(ProjectDetail));
     }
 
     /// <summary>
     /// Closes dialog without saving.
     /// </summary>
-    private void Cancel() => MudDialog?.Cancel();
+    private void Cancel() => m_MudDialog?.Cancel();
 }

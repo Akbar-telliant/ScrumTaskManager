@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using ScrumMaster.Models;
 using ScrumMaster.Services;
 
@@ -14,7 +13,7 @@ public partial class ClientProfileManagementDialog
     /// Dialog instance reference.
     /// </summary>
     [CascadingParameter]
-    private IMudDialogInstance? MudDialog { get; set; }
+    private IMudDialogInstance? m_MudDialog { get; set; }
 
     /// <summary>
     /// Client profile model (passed in from parent).
@@ -32,7 +31,7 @@ public partial class ClientProfileManagementDialog
     /// Entity data service for ClientProfile CRUD.
     /// </summary>
     [Inject]
-    private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
+    private EntityDataService<ClientProfile> m_ClientService { get; set; } = default!;
 
     /// <summary>
     /// Handles form submission.
@@ -42,19 +41,19 @@ public partial class ClientProfileManagementDialog
         if (ClientProfile.Id == 0)
         {
             // New entity → Add
-            await ClientService.AddAsync(ClientProfile);
+            await m_ClientService.AddAsync(ClientProfile);
         }
         else
         {
             // Existing entity → Update
-            await ClientService.UpdateAsync(ClientProfile);
+            await m_ClientService.UpdateAsync(ClientProfile);
         }
 
-        MudDialog?.Close(DialogResult.Ok(ClientProfile));
+        m_MudDialog?.Close(DialogResult.Ok(ClientProfile));
     }
 
     /// <summary>
     /// Closes dialog without saving.
     /// </summary>
-    private void Cancel() => MudDialog?.Cancel();
+    private void Cancel() => m_MudDialog?.Cancel();
 }

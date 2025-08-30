@@ -13,7 +13,7 @@ public partial class UserManagementDialog
     /// Reference to the current MudBlazor dialog instance.
     /// </summary>
     [CascadingParameter]
-    private IMudDialogInstance? MudDialog { get; set; }
+    private IMudDialogInstance? m_MudDialog { get; set; }
 
     /// <summary>
     /// The user entity being created or updated.
@@ -31,7 +31,7 @@ public partial class UserManagementDialog
     /// Service for performing CRUD operations on user entities.
     /// </summary>
     [Inject]
-    private EntityDataService<UserDetails> UserService { get; set; } = default!;
+    private EntityDataService<UserDetails> m_UserService { get; set; } = default!;
 
     /// <summary>
     /// Handles form submission and saves the user.
@@ -42,19 +42,19 @@ public partial class UserManagementDialog
         if (User.Id == 0)
         {
             // New → Add
-            await UserService.AddAsync(User);
+            await m_UserService.AddAsync(User);
         }
         else
         {
             // Existing → Update
-            await UserService.UpdateAsync(User);
+            await m_UserService.UpdateAsync(User);
         }
 
-        MudDialog?.Close(DialogResult.Ok(User));
+        m_MudDialog?.Close(DialogResult.Ok(User));
     }
 
     /// <summary>
     /// Closes the dialog without saving changes.
     /// </summary>
-    private void Cancel() => MudDialog?.Cancel();
+    private void Cancel() => m_MudDialog?.Cancel();
 }

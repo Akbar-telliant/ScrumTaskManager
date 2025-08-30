@@ -13,36 +13,36 @@ public partial class ClientProfileManagement : ComponentBase
     /// <summary>
     /// Holds the list of all clients loaded from the service.
     /// </summary>
-    private List<ClientProfile> clients = new();
+    private List<ClientProfile> m_clients = new();
 
     /// <summary>
     /// Tracks which client IDs have their projects expanded in the UI.
     /// </summary>
-    private HashSet<int> ExpandedClients = new();
+    private HashSet<int> m_ExpandedClients = new();
 
     /// <summary>
     /// Service for performing CRUD operations on client profiles.
     /// </summary>
     [Inject]
-    private EntityDataService<ClientProfile> ClientService { get; set; } = default!;
+    private EntityDataService<ClientProfile> m_ClientService { get; set; } = default!;
 
     /// <summary>
     /// Service for performing CRUD operations on project details.
     /// </summary>
     [Inject]
-    private EntityDataService<ProjectDetails> ProjectService { get; set; } = default!;
+    private EntityDataService<ProjectDetails> m_ProjectService { get; set; } = default!;
 
     /// <summary>
     /// Provides dialog services for opening modals.
     /// </summary>
     [Inject]
-    private IDialogService DialogService { get; set; } = default!;
+    private IDialogService m_DialogService { get; set; } = default!;
 
     /// <summary>
     /// Provides snackbar notifications for user feedback.
     /// </summary>
     [Inject]
-    private ISnackbar Snackbar { get; set; } = default!;
+    private ISnackbar m_Snackbar { get; set; } = default!;
 
     /// <summary>
     /// Initializes the component by loading clients.
@@ -55,11 +55,11 @@ public partial class ClientProfileManagement : ComponentBase
     /// </summary>
     private async Task LoadClientsAsync()
     {
-        clients = await ClientService.GetAllAsync();
+        m_clients = await m_ClientService.GetAllAsync();
 
-        foreach (var client in clients)
+        foreach (var client in m_clients)
         {
-            var projects = await ProjectService.GetByConditionAsync(p => p.ClientId == client.Id);
+            var projects = await m_ProjectService.GetByConditionAsync(p => p.ClientId == client.Id);
             client.Projects = projects ?? new List<ProjectDetails>();
         }
     }
@@ -70,8 +70,10 @@ public partial class ClientProfileManagement : ComponentBase
     /// <param name="clientId">The ID of the client whose projects are being toggled.</param>
     private void ToggleProjects(int clientId)
     {
-        if (!ExpandedClients.Add(clientId))
-            ExpandedClients.Remove(clientId);
+        if (!m_ExpandedClients.Add(clientId))
+        {
+            m_ExpandedClients.Remove(clientId);
+        }
     }
 
     /// <summary>
@@ -86,13 +88,13 @@ public partial class ClientProfileManagement : ComponentBase
             { "DialogTitle", "Add Client Profile" }
         };
 
-        var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Add Client", parameters);
+        var dialog = await m_DialogService.ShowAsync<ClientProfileManagementDialog>("Add Client", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadClientsAsync();
-            Snackbar.Add("Client profile added successfully!", Severity.Success);
+            m_Snackbar.Add("Client profile added successfully!", Severity.Success);
         }
     }
 
@@ -119,13 +121,13 @@ public partial class ClientProfileManagement : ComponentBase
             { "DialogTitle", "Edit Client Profile" }
         };
 
-        var dialog = await DialogService.ShowAsync<ClientProfileManagementDialog>("Edit Client", parameters);
+        var dialog = await m_DialogService.ShowAsync<ClientProfileManagementDialog>("Edit Client", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadClientsAsync();
-            Snackbar.Add("Client profile updated successfully!", Severity.Info);
+            m_Snackbar.Add("Client profile updated successfully!", Severity.Info);
         }
     }
 
@@ -136,7 +138,7 @@ public partial class ClientProfileManagement : ComponentBase
     /// <returns>A task representing the asynchronous delete operation.</returns>
     private async Task DeleteClientAsync(ClientProfile client)
     {
-        bool? confirmed = await DialogService.ShowMessageBox(
+        bool? confirmed = await m_DialogService.ShowMessageBox(
             "Confirm Delete",
             $"Are you sure you want to delete client '{client.Name}'?",
             yesText: "Delete",
@@ -144,9 +146,9 @@ public partial class ClientProfileManagement : ComponentBase
 
         if (confirmed == true)
         {
-            await ClientService.DeleteAsync(client.Id);
+            await m_ClientService.DeleteAsync(client.Id);
             await LoadClientsAsync();
-            Snackbar.Add("Client profile deleted successfully!", Severity.Error);
+            m_Snackbar.Add("Client profile deleted successfully!", Severity.Error);
         }
     }
 
@@ -170,13 +172,13 @@ public partial class ClientProfileManagement : ComponentBase
             { "DialogTitle", $"Add Project for {client.Name}" }
         };
 
-        var dialog = await DialogService.ShowAsync<ProjectDetailDialog>("Add Project", parameters);
+        var dialog = await m_DialogService.ShowAsync<ProjectDetailDialog>("Add Project", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadClientsAsync();
-            Snackbar.Add("Project added successfully!", Severity.Success);
+            m_Snackbar.Add("Project added successfully!", Severity.Success);
         }
     }
 
@@ -204,13 +206,13 @@ public partial class ClientProfileManagement : ComponentBase
             { "DialogTitle", $"Edit Project - {project.Name}" }
         };
 
-        var dialog = await DialogService.ShowAsync<ProjectDetailDialog>("Edit Project", parameters);
+        var dialog = await m_DialogService.ShowAsync<ProjectDetailDialog>("Edit Project", parameters);
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
         {
             await LoadClientsAsync();
-            Snackbar.Add("Project updated successfully!", Severity.Info);
+            m_Snackbar.Add("Project updated successfully!", Severity.Info);
         }
     }
 
@@ -221,7 +223,7 @@ public partial class ClientProfileManagement : ComponentBase
     /// <returns>A task representing the asynchronous delete operation.</returns>
     private async Task DeleteProjectAsync(ProjectDetails project)
     {
-        bool? confirmed = await DialogService.ShowMessageBox(
+        bool? confirmed = await m_DialogService.ShowMessageBox(
             "Confirm Delete",
             $"Are you sure you want to delete project '{project.Name}'?",
             yesText: "Delete",
@@ -229,9 +231,9 @@ public partial class ClientProfileManagement : ComponentBase
 
         if (confirmed == true)
         {
-            await ProjectService.DeleteAsync(project.Id);
+            await m_ProjectService.DeleteAsync(project.Id);
             await LoadClientsAsync();
-            Snackbar.Add("Project deleted successfully!", Severity.Error);
+            m_Snackbar.Add("Project deleted successfully!", Severity.Error);
         }
     }
 }

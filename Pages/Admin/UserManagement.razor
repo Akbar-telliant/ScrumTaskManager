@@ -3,11 +3,16 @@
 @using MudBlazor
 @using ScrumMaster.Models
 
+<!-- Main container for User Management page -->
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
+        <!-- Page Title -->
         <MudText Typo="Typo.h4" Color="Color.Primary">User Management</MudText>
+
+        <!-- Subtitle / description -->
         <MudText Typo="Typo.subtitle1">Manage users, roles, and permissions.</MudText>
 
+        <!-- Add User Button -->
         <MudIconButton Class="add-btn"
                        Size="Size.Small"
                        Color="Color.Primary"
@@ -15,8 +20,10 @@
                        Icon="@Icons.Material.Rounded.Add"
                        OnClick="AddUserAsync" />
 
-        <MudTable Items="@users" Hover="true" Striped="true" Dense="true">
+        <!-- Table displaying list of users -->
+        <MudTable Items="@m_users" Hover="true" Striped="true" Dense="true">
             <HeaderContent>
+                <!-- Table Headers -->
                 <MudTh>User Name</MudTh>
                 <MudTh>Email</MudTh>
                 <MudTh>Role</MudTh>
@@ -24,9 +31,15 @@
                 <MudTh>Actions</MudTh>
             </HeaderContent>
 
+            <!-- Row template for each user -->
             <RowTemplate Context="user">
+                <!-- User Name -->
                 <MudTd>@user.UserName</MudTd>
+
+                <!-- User Email -->
                 <MudTd>@user.Email</MudTd>
+
+                <!-- User Role (chip style) -->
                 <MudTd>
                     <MudChip T="string"
                              Color="@(user.Role == UserDetails.TUserRole.Admin ? Color.Secondary : Color.Primary)"
@@ -34,15 +47,23 @@
                         @user.Role.ToString()
                     </MudChip>
                 </MudTd>
+
+                <!-- Account creation date -->
                 <MudTd>@user.CreatedAt.ToShortDateString()</MudTd>
+
+                <!-- Action buttons -->
                 <MudTd>
+                    <!-- Edit User -->
                     <MudButton Variant="Variant.Text" Color="Color.Primary"
                                OnClick="@(() => EditUserAsync(user))">Edit</MudButton>
+
+                    <!-- Delete User -->
                     <MudButton Variant="Variant.Text" Color="Color.Error"
                                OnClick="@(() => DeleteUserAsync(user))">Delete</MudButton>
                 </MudTd>
             </RowTemplate>
 
+            <!-- Pagination controls -->
             <PagerContent>
                 <MudTablePager />
             </PagerContent>
