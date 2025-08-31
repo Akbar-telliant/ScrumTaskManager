@@ -1,67 +1,104 @@
-﻿@using MudBlazor
+﻿@page "/"
 
+@using MudBlazor
+@using ScrumMaster.Models
 
-@page "/"
+<!--
+    Home page displaying Scrum tasks in a table with CRUD functionality.
+    Uses MudBlazor components for UI.
+-->
+<MudPaper Class="pa-4">
 
-<MudPaper Class="pt-4 pb-4 pa-4">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
-        <MudText Typo="Typo.h5">Scrum Management</MudText>
-        <MudStack Row="true" Spacing="1">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddRow" StartIcon="@Icons.Material.Filled.Add">Add Row</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="ResetData" StartIcon="@Icons.Material.Filled.Restore">Reset</MudButton>
-        </MudStack>
-    </MudStack>
+    <!--
+        Main table displaying Scrum items.
+        Properties:
+        - Items: Binds to 'Items' list from the code-behind.
+        - Hover, Bordered, Striped: UI options for table styling.
+    -->
+    <MudTable Items="Items" Hover="true" Bordered="true" Striped="true">
 
-    <MudTable Items="items" Dense="true" Hover="true" Bordered="true" Striped="true" Breakpoint="Breakpoint.Sm">
+        <!-- Table header -->
         <HeaderContent>
-            <MudTh Style="width: 18%">Name</MudTh>
-            <MudTh Style="width: 18%">Project</MudTh>
-            <MudTh Style="width: 10%">ID</MudTh>
+            <!-- Column headers (Title column removed) -->
+            <MudTh>Assigned To</MudTh>
+            <MudTh>Project</MudTh>
+            <MudTh>Item Id</MudTh>
             <MudTh>Description</MudTh>
-            <MudTh Style="width: 14%">Status</MudTh>
-            <MudTh Style="width: 140px">Actions</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Actions</MudTh>
         </HeaderContent>
-        <RowTemplate>
+
+        <!-- Table rows -->
+        <RowTemplate Context="context">
+            <!--
+                Each row binds to a ScrumDetails object ('context').
+                Provides editable fields and dropdowns for properties.
+            -->
+            <!-- Assigned To Dropdown -->
             <MudTd>
-                <MudSelect T="string" @bind-Value="context.Name" Dense="true" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (var n in Names)
+                <MudSelect T="string" @bind-Value="context.AssignedTo" Dense="true">
+                    @foreach (var user in Users)
                     {
-                        <MudSelectItem Value="@n">@n</MudSelectItem>
+                        <MudSelectItem Value="@user.UserName">@user.UserName</MudSelectItem>
                     }
                 </MudSelect>
             </MudTd>
+
+            <!-- Project Dropdown -->
             <MudTd>
-                <MudSelect T="string" @bind-Value="context.Project" Dense="true" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (var p in Projects)
+                <MudSelect T="int" @bind-Value="context.ProjectId" Dense="true">
+                    @foreach (var project in Projects)
                     {
-                        <MudSelectItem Value="@p">@p</MudSelectItem>
+                        <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
                     }
                 </MudSelect>
             </MudTd>
+
+            <!-- Item Id field -->
             <MudTd>
-                <MudTextField T="string" @bind-Value="context.Id" Immediate="true" />
+                <MudTextField T="string" @bind-Value="context.ItemId" Immediate="true" />
             </MudTd>
+
+            <!-- Description field -->
             <MudTd>
-                <MudTextField T="string" Lines="2" @bind-Value="context.Description" Immediate="true" Placeholder="Short description" />
+                <MudTextField T="string" Lines="2" @bind-Value="context.Description" Immediate="true" />
             </MudTd>
+
+            <!-- Status Dropdown -->
             <MudTd>
-                <MudSelect T="string" @bind-Value="context.Status" Dense="true" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (var s in Statuses)
+                <MudSelect T="ScrumDetails.ScrumStatus" @bind-Value="context.Status" Dense="true">
+                    @foreach (var status in Enum.GetValues<ScrumDetails.ScrumStatus>())
                     {
-                        <MudSelectItem Value="@s">@s</MudSelectItem>
+                        <MudSelectItem Value="@status">@status</MudSelectItem>
                     }
                 </MudSelect>
             </MudTd>
+
+            <!-- Row Actions -->
             <MudTd>
-                <MudStack Row="true" Spacing="1">
-                    <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Color="Color.Default" Disabled="@IsFirst(context)" OnClick="@(() => MoveUp(context))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Color="Color.Default" Disabled="@IsLast(context)" OnClick="@(() => MoveDown(context))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Remove(context))" />
-                </MudStack>
+                <!-- Save changes for this row -->
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => SaveChanges(context)">
+                    Save
+                </MudButton>
+
+                <!-- Delete this row -->
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Remove(context)">
+                    Delete
+                </MudButton>
             </MudTd>
         </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[] { 5, 10, 20 }" />
-        </PagerContent>
     </MudTable>
+
+    <MudDivider Class="my-4" />
+
+    <!-- Global action buttons -->
+    <!-- Add new row -->
+    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="AddRow">
+        Add Row
+    </MudButton>
+
+    <!-- Reset table (clears all rows) -->
+    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="ResetData">
+        Reset
+    </MudButton>
 </MudPaper>

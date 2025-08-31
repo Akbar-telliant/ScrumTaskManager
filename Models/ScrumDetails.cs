@@ -104,6 +104,13 @@ public class ScrumDetails
     public int Id { get; set; }
 
     /// <summary>
+    /// Business identifier for the work item (e.g., US-1001, T-2002, BUG-3003).
+    /// </summary>
+    [Required(ErrorMessage = "Item ID is required")]
+    [StringLength(50, ErrorMessage = "Max 50 characters")]
+    public string ItemId { get; set; } = string.Empty;
+
+    /// <summary>
     /// Foreign key to the project this item belongs to.
     /// </summary>
     [ForeignKey("ProjectDetails")]
