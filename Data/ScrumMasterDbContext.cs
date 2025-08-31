@@ -33,6 +33,11 @@ public class ScrumMasterDbContext : DbContext
     public DbSet<UserDetails> m_UserDetail { get; set; } = null!;
 
     /// <summary>
+    /// Table for scrum details.
+    /// </summary>
+    public DbSet<ScrumDetails> m_ScrumDetails { get; set; } = null!;
+
+    /// <summary>
     /// Configure entity relationships.
     /// </summary>
     /// <param name="modelBuilder">EF model builder.</param>

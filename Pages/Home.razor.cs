@@ -1,80 +1,93 @@
 ﻿using Microsoft.AspNetCore.Components;
+using ScrumMaster.Models;
+using ScrumMaster.Services;
 
 namespace ScrumMaster.Pages;
 
 /// <summary>
-/// Defines logic for the home page.
+/// Home page for managing Scrum tasks with CRUD operations using EntityDataService.
 /// </summary>
 public partial class Home : ComponentBase
 {
-    // --- Demo lookups ---
-    private readonly List<string> Names = new() { "Roophan", "Akbar", "Pushpalatha", "Aishwarya", "Sanjay" };
-    private readonly List<string> Projects = new() { "Content-Server", "Mobile", "Capture", "IPTA" };
-    private readonly List<string> Statuses = new() { "New", "In Progress", "Closed", "On Hold", "Dropped" };
+    /// <summary>
+    /// Service for CRUD operations on ScrumDetails.
+    /// </summary>
+    [Inject]
+    private EntityDataService<ScrumDetails> ScrumService { get; set; } = default!;
 
-    // --- Data model ---
-    public class WorkItem
+    /// <summary>
+    /// Service for CRUD operations on UserDetails.
+    /// </summary>
+    [Inject]
+    private EntityDataService<UserDetails> UserService { get; set; } = default!;
+
+    /// <summary>
+    /// Service for CRUD operations on ProjectDetails.
+    /// </summary>
+    [Inject]
+    private EntityDataService<ProjectDetails> ProjectService { get; set; } = default!;
+
+    /// <summary>
+    /// List of users for UI dropdowns.
+    /// </summary>
+    private List<UserDetails> Users { get; set; } = new();
+
+    /// <summary>
+    /// List of projects for UI dropdowns.
+    /// </summary>
+    private List<ProjectDetails> Projects { get; set; } = new();
+
+    /// <summary>
+    /// List of Scrum items displayed in the table.
+    /// </summary>
+    private List<ScrumDetails> Items { get; set; } = new();
+
+    /// <summary>
+    /// Load Users, Projects, and Scrum items including Project navigation property when page initializes.
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    protected override async Task OnInitializedAsync()
     {
-        public string? Name { get; set; }
-        public string? Project { get; set; }
-        public string Id { get; set; } = string.Empty;
-        public string? Description { get; set; }
-        public string? Status { get; set; } = "New";
+        Users = (await UserService.GetAllAsync()) ?? new();
+        Projects = (await ProjectService.GetAllAsync()) ?? new();
+        Items = (await ScrumService.GetAllAsync(s => s.Project)) ?? new();
     }
 
-    // --- Backing collection ---
-    private List<WorkItem> items = new()
+    /// <summary>
+    /// Add a new Scrum row, saved immediately to DB and added to UI list.
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    private async Task AddRow()
     {
-        new() { Name = "Roophan", Project = "Milner", Id = "T-1001", Description = "Initial setup", Status = "In Progress" },
-        new() { Name = "Akbar", Project = "Milner", Id = "T-1002", Description = "API skeleton", Status = "New" },
-        new() { Name = "Pushpalatha", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "Closed" },
-        new() { Name = "Aishwarya", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "On Hold" },
-        new() { Name = "Sanjay", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "Dropped" }
-
-};
-
-    // --- Commands ---
-    private void AddRow()
-    {
-        items.Add(new WorkItem { Status = "New" });
+        var newItem = new ScrumDetails { Status = ScrumDetails.ScrumStatus.New };
+        await ScrumService.AddAsync(newItem);
+        Items.Add(newItem);
     }
 
-    private void Remove(WorkItem item)
+    /// <summary>
+    /// Remove a Scrum row from DB (if it exists) and from UI list.
+    /// </summary>
+    /// <param name="item">ScrumDetails item to remove.</param>
+    /// <returns>Task representing the async operation.</returns>
+    private async Task Remove(ScrumDetails item)
     {
-        items.Remove(item);
+        if (item.Id != 0) await ScrumService.DeleteAsync(item.Id);
+        Items.Remove(item);
     }
 
-    private bool IsFirst(WorkItem item) => ReferenceEquals(item, items.FirstOrDefault());
-    private bool IsLast(WorkItem item) => ReferenceEquals(item, items.LastOrDefault());
-
-    private void MoveUp(WorkItem item)
+    /// <summary>
+    /// Save changes for a Scrum row; adds new if Id is 0 or updates existing row.
+    /// </summary>
+    /// <param name="item">ScrumDetails item to save or update.</param>
+    /// <returns>Task representing the async operation.</returns>
+    private async Task SaveChanges(ScrumDetails item)
     {
-        var idx = items.IndexOf(item);
-        if (idx > 0)
-        {
-            (items[idx - 1], items[idx]) = (items[idx], items[idx - 1]);
-        }
+        if (item.Id == 0) await ScrumService.AddAsync(item);
+        else await ScrumService.UpdateAsync(item);
     }
 
-    private void MoveDown(WorkItem item)
-    {
-        var idx = items.IndexOf(item);
-        if (idx >= 0 && idx < items.Count - 1)
-        {
-            (items[idx + 1], items[idx]) = (items[idx], items[idx + 1]);
-        }
-    }
-
-    private void ResetData()
-    {
-        items = new()
-        {
-             new() { Name = "Roophan", Project = "Milner", Id = "T-1001", Description = "Initial setup", Status = "In Progress" },
-        new() { Name = "Akbar", Project = "Milner", Id = "T-1002", Description = "API skeleton", Status = "New" },
-        new() { Name = "Pushpalatha", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "Closed" },
-        new() { Name = "Aishwarya", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "On Hold" },
-        new() { Name = "Sanjay", Project = "Milner", Id = "T-1003", Description = "DB schema", Status = "Dropped" }
-        };
-    }
-
+    /// <summary>
+    /// Reset the table by clearing all Scrum items in the UI (does not affect DB).
+    /// </summary>
+    private void ResetData() => Items.Clear();
 }
