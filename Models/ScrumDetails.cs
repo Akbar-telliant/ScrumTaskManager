@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScrumMaster.Models;
@@ -45,6 +46,7 @@ public class ScrumDetails
     /// Foreign key referencing the assigned user.
     /// </summary>
     [Required]
+    [DisplayName("Assigned To")]
     public int UserId { get; set; }
 
     /// <summary>
@@ -56,6 +58,7 @@ public class ScrumDetails
     /// Foreign key referencing the project.
     /// </summary>
     [Required]
+    [DisplayName("Project")]
     public int ProjectId { get; set; }
 
     /// <summary>
@@ -67,17 +70,20 @@ public class ScrumDetails
     /// Unique identifier of the work item.
     /// </summary>
     [Required, StringLength(50)]
+    [DisplayName("Item Id")]
     public string ItemId { get; set; } = string.Empty;
 
     /// <summary>
     /// Detailed description of the work item.
     /// </summary>
     [Required, StringLength(500)]
+    [DisplayName("Description")]
     public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Current status of the work item.
     /// </summary>
     [Required]
+    [DisplayName("Status")]
     public ScrumStatus Status { get; set; }
 }
