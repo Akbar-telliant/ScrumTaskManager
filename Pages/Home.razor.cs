@@ -43,6 +43,12 @@ public partial class Home : ComponentBase
     private List<ScrumDetails> Items { get; set; } = new();
 
     /// <summary>
+    /// Provides snackbar notifications for user feedback.
+    /// </summary>
+    [Inject]
+    private ISnackbar m_Snackbar { get; set; } = default!;
+
+    /// <summary>
     /// Load Users, Projects, and Scrum items including Project navigation property when page initializes.
     /// </summary>
     /// <returns>Task representing the async operation.</returns>
@@ -91,8 +97,23 @@ public partial class Home : ComponentBase
     /// <returns>Task representing the async operation.</returns>
     private async Task SaveChanges(ScrumDetails item)
     {
-        if (item.Id == 0) await ScrumService.AddAsync(item);
-        else await ScrumService.UpdateAsync(item);
+        try
+        {
+            if (item.Id == 0)
+            {
+                await ScrumService.AddAsync(item);
+                m_Snackbar.Add("Scrum item added successfully!", Severity.Success);
+            }
+            else
+            {
+                await ScrumService.UpdateAsync(item);
+                m_Snackbar.Add("Scrum item updated successfully!", Severity.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            m_Snackbar.Add($"Error saving item: {ex.Message}", Severity.Error);
+        }
     }
 
     /// <summary>

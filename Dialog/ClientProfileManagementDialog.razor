@@ -8,10 +8,8 @@
     <DataAnnotationsValidator />
 
     <!-- Main dialog container -->
-    <MudDialog Style="width:450px;">
+    <MudDialog Style="width:450px;" Title="@DialogTitle">
         <DialogContent>
-            <!-- Dialog title -->
-            <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
             <!-- Text field for client name (required field) -->
             <MudTextField T="string"
