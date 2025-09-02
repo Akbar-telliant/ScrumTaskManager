@@ -50,7 +50,7 @@ public partial class Home : ComponentBase
     {
         Users = (await UserService.GetAllAsync()) ?? new();
         Projects = (await ProjectService.GetAllAsync()) ?? new();
-        Items = (await ScrumService.GetAllAsync(s => s.Project)) ?? new();
+        Items = (await ScrumService.GetAllAsync(s => s.Project, s => s.User)) ?? new();
     }
 
     /// <summary>
@@ -59,7 +59,16 @@ public partial class Home : ComponentBase
     /// <returns>Task representing the async operation.</returns>
     private async Task AddRow()
     {
-        var newItem = new ScrumDetails { Status = ScrumDetails.ScrumStatus.New };
+        var defaultUserId = Users.FirstOrDefault()?.Id ?? 0;
+        var defaultProjectId = Projects.FirstOrDefault()?.Id ?? 0;
+
+        var newItem = new ScrumDetails
+        {
+            Status = ScrumDetails.ScrumStatus.New,
+            UserId = defaultUserId,
+            ProjectId = defaultProjectId
+        };
+
         await ScrumService.AddAsync(newItem);
         Items.Add(newItem);
     }

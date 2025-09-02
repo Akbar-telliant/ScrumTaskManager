@@ -3,28 +3,25 @@
 @using MudBlazor
 @using ScrumMaster.Models
 
-<!--
-    Home page displaying Scrum tasks in a table with CRUD functionality.
-    Uses MudBlazor components for UI.
--->
+<!-- Home page displaying Scrum tasks in a table with CRUD functionality -->
 <MudPaper Class="pa-4">
 
-    <MudStack Class="pt-4 pb-4 pr-4" Row="true">     
+    <!-- Toolbar with Add and Reset buttons -->
+    <MudStack Class="pt-4 pb-4 pr-4" Row="true">
+        <!-- Add new row button -->
         <MudTooltip Text="Add Row">
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Icon="@Icons.Material.Rounded.Add" OnClick="AddRow" /> 
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                           Icon="@Icons.Material.Rounded.Add" OnClick="AddRow" />
         </MudTooltip>
 
+        <!-- Reset all data button -->
         <MudTooltip Text="Reset All">
-            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Icon="@Icons.Material.Rounded.Restore" OnClick="ResetData" />
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                           Icon="@Icons.Material.Rounded.Restore" OnClick="ResetData" />
         </MudTooltip>
     </MudStack>
 
-    <!--
-        Main table displaying Scrum items.
-        Properties:
-        - Items: Binds to 'Items' list from the code-behind.
-        - Hover, Bordered, Striped: UI options for table styling.
-    -->
+    <!-- Scrum items table -->
     <MudTable Items="Items" Hover="true" Bordered="true" Striped="true">
 
         <!-- Table header -->
@@ -37,23 +34,20 @@
             <MudTh>Actions</MudTh>
         </HeaderContent>
 
-        <!-- Table rows -->
+        <!-- Table rows bound to ScrumDetails -->
         <RowTemplate Context="context">
-            <!--
-                Each row binds to a ScrumDetails object ('context').
-                Provides editable fields and dropdowns for properties.
-            -->
-            <!-- Assigned To Dropdown -->
+
+            <!-- Assigned To dropdown -->
             <MudTd>
-                <MudSelect T="string" @bind-Value="context.AssignedTo" Dense="true">
+                <MudSelect T="int" @bind-Value="context.UserId" Dense="true">
                     @foreach (var user in Users)
                     {
-                        <MudSelectItem Value="@user.UserName">@user.UserName</MudSelectItem>
+                        <MudSelectItem Value="@user.Id">@user.UserName</MudSelectItem>
                     }
                 </MudSelect>
             </MudTd>
 
-            <!-- Project Dropdown -->
+            <!-- Project dropdown -->
             <MudTd>
                 <MudSelect T="int" @bind-Value="context.ProjectId" Dense="true">
                     @foreach (var project in Projects)
@@ -62,15 +56,18 @@
                     }
                 </MudSelect>
             </MudTd>
-          
+
+            <!-- Item Id text field -->
             <MudTd>
                 <MudTextField T="string" @bind-Value="context.ItemId" Immediate="true" />
-            </MudTd>   
-            
+            </MudTd>
+
+            <!-- Description text area -->
             <MudTd>
                 <MudTextField T="string" Lines="2" @bind-Value="context.Description" Immediate="true" />
             </MudTd>
 
+            <!-- Status dropdown -->
             <MudTd>
                 <MudSelect T="ScrumDetails.ScrumStatus" @bind-Value="context.Status" Dense="true">
                     @foreach (var status in Enum.GetValues<ScrumDetails.ScrumStatus>())
@@ -80,15 +77,15 @@
                 </MudSelect>
             </MudTd>
 
-            <!-- Row Actions -->
-            <MudTd>               
+            <!-- Row actions: Save and Delete -->
+            <MudTd>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => SaveChanges(context)">
                     Save
-                </MudButton>              
+                </MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Remove(context)">
                     Delete
                 </MudButton>
             </MudTd>
         </RowTemplate>
-    </MudTable>   
+    </MudTable>
 </MudPaper>
