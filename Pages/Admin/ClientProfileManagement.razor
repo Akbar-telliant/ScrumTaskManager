@@ -5,22 +5,18 @@
 
 <MudContainer>
     <MudStack Spacing="2" Class="pa-4">
-        <!-- Page title and description -->
-        <MudText Typo="Typo.h4" Color="Color.Primary">Client Profiles</MudText>
-        <MudText Typo="Typo.subtitle1">Manage client details and settings.</MudText>
-
-        <!-- Add new client button -->
-        <MudIconButton Class="add-btn"
-                       Size="Size.Small"
-                       Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       Icon="@Icons.Material.Rounded.Add"
-                       OnClick="AddClientAsync" />
-
+        <MudStack>
+           <MudText Typo="Typo.h4" Color="Color.Primary">Client Profiles</MudText>
+           <MudText Typo="Typo.subtitle1">Manage client details and settings.</MudText>
+        </MudStack>
+        <MudStack>
+        <MudIconButton Class="add-btn" Size="Size.Small" Style="width:50px;" Color="Color.Primary" Variant="Variant.Filled" 
+                       Icon="@Icons.Material.Rounded.Add" OnClick="AddClientAsync" />
+        </MudStack>
         <!-- Main clients table -->
         <MudTable Items="@m_clients" Hover="true" Striped="true" Dense="true">
             <HeaderContent>
-                <!-- Table header columns -->
+                <MudTh Class="pa-0 ma-0"></MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Code</MudTh>
                 <MudTh>Active</MudTh>
@@ -29,11 +25,21 @@
             </HeaderContent>
 
             <RowTemplate Context="client">
-                <!-- Display client row -->
+                <MudTh Class="pa-0 ma-0 pl-2 ">
+                    @if (client.Projects?.Any() == true)
+                    {
+
+                        <MudTooltip Text="Show / Hide Project">
+                            <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" Icon="@Icons.Material.Rounded.ArrowDropDown"
+                                           OnClick="@(() => ToggleProjects(client.Id))" />
+                        </MudTooltip>
+                                          
+                    }
+
+                </MudTh>
                 <MudTd>@client.Name</MudTd>
                 <MudTd>@client.Code</MudTd>
                 <MudTd>
-                    <!-- Active status chip -->
                     <MudChip T="string"
                              Color="@(@client.IsActive ? Color.Success : Color.Error)"
                              Variant="Variant.Filled">
@@ -42,23 +48,18 @@
                 </MudTd>
                 <MudTd>@client.Notes</MudTd>
                 <MudTd>
-                    <!-- Row action buttons: Edit, Delete, Add Project, Show/Hide Projects -->
-                    <MudButton Variant="Variant.Text" Color="Color.Primary"
-                               OnClick="@(() => EditClientAsync(client))">Edit</MudButton>
-
-                    <MudButton Variant="Variant.Text" Color="Color.Error"
-                               OnClick="@(() => DeleteClientAsync(client))">Delete</MudButton>
-
-                    <MudButton Variant="Variant.Text" Color="Color.Success"
-                               OnClick="@(() => AddProjectAsync(client))">Add Project</MudButton>
-
-                    @if (client.Projects?.Any() == true)
-                    {
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary"
-                                   OnClick="@(() => ToggleProjects(client.Id))">
-                            @(m_ExpandedClients.Contains(client.Id) ? "Hide Projects" : "Show Projects")
-                        </MudButton>
-                    }
+                    <MudTooltip Text="@("Edit " + @client.Name)">
+                       <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" Icon="@Icons.Material.Rounded.Edit"
+                                      OnClick="@(() => EditClientAsync(client))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@("Delete " + @client.Name)">
+                       <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Rounded.Delete"
+                                  OnClick="@(() => DeleteClientAsync(client))" />
+                    </MudTooltip>
+                    <MudTooltip Text="Add Project">
+                       <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Success" Icon="@Icons.Material.Rounded.AddTask"
+                                  OnClick="@(() => AddProjectAsync(client))" />
+                    </MudTooltip>                   
                 </MudTd>
             </RowTemplate>
 

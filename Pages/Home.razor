@@ -9,6 +9,16 @@
 -->
 <MudPaper Class="pa-4">
 
+    <MudStack Class="pt-4 pb-4 pr-4" Row="true">     
+        <MudTooltip Text="Add Row">
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Icon="@Icons.Material.Rounded.Add" OnClick="AddRow" /> 
+        </MudTooltip>
+
+        <MudTooltip Text="Reset All">
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Icon="@Icons.Material.Rounded.Restore" OnClick="ResetData" />
+        </MudTooltip>
+    </MudStack>
+
     <!--
         Main table displaying Scrum items.
         Properties:
@@ -19,7 +29,6 @@
 
         <!-- Table header -->
         <HeaderContent>
-            <!-- Column headers (Title column removed) -->
             <MudTh>Assigned To</MudTh>
             <MudTh>Project</MudTh>
             <MudTh>Item Id</MudTh>
@@ -53,18 +62,15 @@
                     }
                 </MudSelect>
             </MudTd>
-
-            <!-- Item Id field -->
+          
             <MudTd>
                 <MudTextField T="string" @bind-Value="context.ItemId" Immediate="true" />
-            </MudTd>
-
-            <!-- Description field -->
+            </MudTd>   
+            
             <MudTd>
                 <MudTextField T="string" Lines="2" @bind-Value="context.Description" Immediate="true" />
             </MudTd>
 
-            <!-- Status Dropdown -->
             <MudTd>
                 <MudSelect T="ScrumDetails.ScrumStatus" @bind-Value="context.Status" Dense="true">
                     @foreach (var status in Enum.GetValues<ScrumDetails.ScrumStatus>())
@@ -75,30 +81,14 @@
             </MudTd>
 
             <!-- Row Actions -->
-            <MudTd>
-                <!-- Save changes for this row -->
+            <MudTd>               
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => SaveChanges(context)">
                     Save
-                </MudButton>
-
-                <!-- Delete this row -->
+                </MudButton>              
                 <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Remove(context)">
                     Delete
                 </MudButton>
             </MudTd>
         </RowTemplate>
-    </MudTable>
-
-    <MudDivider Class="my-4" />
-
-    <!-- Global action buttons -->
-    <!-- Add new row -->
-    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="AddRow">
-        Add Row
-    </MudButton>
-
-    <!-- Reset table (clears all rows) -->
-    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="ResetData">
-        Reset
-    </MudButton>
+    </MudTable>   
 </MudPaper>
