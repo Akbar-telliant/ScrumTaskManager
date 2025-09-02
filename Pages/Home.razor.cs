@@ -45,6 +45,16 @@ public partial class Home : ComponentBase
     private List<ScrumDetails> Items { get; set; } = new();
 
     /// <summary>
+    /// Currently selected date, defaults to today.
+    /// </summary>
+    private DateTime? m_SelectedDate = DateTime.Today;
+
+    /// <summary>
+    /// List of Scrum items filtered based on the selected date or criteria.
+    /// </summary>
+    private List<ScrumDetails> filteredItems = new();
+
+    /// <summary>
     /// Provides snackbar notifications for user feedback.
     /// </summary>
     [Inject]
@@ -56,6 +66,8 @@ public partial class Home : ComponentBase
     /// <returns>Task representing the async operation.</returns>
     protected override async Task OnInitializedAsync()
     {
+        Items = await ScrumService.GetAllAsync();
+        FilterByDate();
         Users = (await UserService.GetAllAsync()) ?? new();
         Projects = (await ProjectService.GetAllAsync()) ?? new();
         Items = (await ScrumService.GetAllAsync(s => s.Project, s => s.User)) ?? new();
@@ -101,6 +113,9 @@ public partial class Home : ComponentBase
     {
         try
         {
+            if (item.ScrumDate == default)
+                item.ScrumDate = m_SelectedDate ?? DateTime.Today;
+
             if (item.Id == 0)
             {
                 await ScrumService.AddAsync(item);
@@ -111,6 +126,12 @@ public partial class Home : ComponentBase
                 await ScrumService.UpdateAsync(item);
                 m_Snackbar.Add("Scrum item updated successfully!", Severity.Success);
             }
+
+            // Reload items from DB to keep Items fresh
+            Items = await ScrumService.GetAllAsync();
+
+            // Re-apply filter
+            FilterByDate();
         }
         catch (Exception ex)
         {
@@ -173,5 +194,24 @@ public partial class Home : ComponentBase
 
         var bytes = Encoding.UTF8.GetBytes(sb.ToString());
         await JSRuntime.InvokeDownloadAsync("ScrumItems.txt", "text/plain", bytes);
+    }
+
+    /// <summary>
+    /// Filters Scrum items based on the selected date, or returns all if no date is selected.
+    /// </summary>
+    private void FilterByDate()
+    {
+        if (m_SelectedDate.HasValue)
+        {
+            filteredItems = Items
+                .Where(i => i.ScrumDate.Date == m_SelectedDate.Value.Date)
+                .ToList();
+        }
+        else
+        {
+            filteredItems = Items.ToList();
+        }
+
+        StateHasChanged(); // force UI update
     }
 }

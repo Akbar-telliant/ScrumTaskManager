@@ -29,6 +29,14 @@
                            Icon="@Icons.Material.Rounded.Download" OnClick="ExportToText" />
         </MudTooltip>
     </MudStack>
+
+    <!-- Date picker and button for selecting a Scrum date and filtering items accordingly -->
+    <MudStack Row="true" Class="mb-4" Spacing="2">
+        <MudDatePicker @bind-Date="m_SelectedDate" Label="Scrum Date" DateFormat="dd/MM/yyyy" Dense="true"
+                       Margin="Margin.Dense" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Dense="true" OnClick="FilterByDate"
+                   Icon="@Icons.Material.Filled.FilterList" />
+    </MudStack>
     
     <!-- Scrum items table -->
     <MudTable Items="Items" Hover="true" Bordered="true" Striped="true">
