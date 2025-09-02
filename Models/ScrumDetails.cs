@@ -43,6 +43,13 @@ public class ScrumDetails
     public int Id { get; set; }
 
     /// <summary>
+    /// Gets or sets the Scrum entry date. Defaults to today's date.
+    /// </summary>
+    [DisplayName("Date")]
+    [DataType(DataType.Date)]
+    public DateTime ScrumDate { get; set; } = DateTime.Today;
+
+    /// <summary>
     /// Foreign key referencing the assigned user.
     /// </summary>
     [Required]
