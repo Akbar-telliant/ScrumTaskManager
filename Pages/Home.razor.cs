@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ScrumMaster.Models;
 using ScrumMaster.Services;
+using System.ComponentModel;
+using System.Text;
 
 namespace ScrumMaster.Pages;
 
@@ -120,4 +122,56 @@ public partial class Home : ComponentBase
     /// Reset the table by clearing all Scrum items in the UI (does not affect DB).
     /// </summary>
     private void ResetData() => Items.Clear();
+
+    /// <summary>
+    /// Exports Scrum items to a text file and downloads it.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task ExportToText()
+    {
+        if (Items == null || Items.Count == 0)
+        {
+            m_Snackbar.Add("No data to export.", Severity.Warning);
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine("Scrum Items Export");
+        sb.AppendLine("==================\n");
+
+        foreach (var item in Items)
+        {
+            foreach (var prop in typeof(ScrumDetails).GetProperties())
+            {
+                // Skip navigation objects
+                if (prop.PropertyType == typeof(UserDetails) || prop.PropertyType == typeof(ProjectDetails))
+                    continue;
+
+                // Skip primary Id
+                if (prop.Name == nameof(ScrumDetails.Id))
+                    continue;
+
+                // Get display name if available
+                var displayName = prop.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                                      .Cast<DisplayNameAttribute>()
+                                      .FirstOrDefault()?.DisplayName ?? prop.Name;
+
+                object? value = prop.GetValue(item);
+
+                // Replace IDs with friendly names
+                if (prop.Name == nameof(ScrumDetails.UserId))
+                    value = Users.FirstOrDefault(u => u.Id == item.UserId)?.UserName ?? "Unknown";
+
+                if (prop.Name == nameof(ScrumDetails.ProjectId))
+                    value = Projects.FirstOrDefault(p => p.Id == item.ProjectId)?.Name ?? "Unknown";
+
+                sb.AppendLine($"{displayName} : {value}");
+            }
+
+            sb.AppendLine(new string('-', 40));
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        await JSRuntime.InvokeDownloadAsync("ScrumItems.txt", "text/plain", bytes);
+    }
 }

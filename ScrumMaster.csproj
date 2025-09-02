@@ -21,6 +21,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="8.11.0" />
+    <PackageReference Include="Toolbelt.Blazor.InvokeDownloadAsync" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,10 @@
 ﻿@page "/"
 
+@using Microsoft.JSInterop
 @using MudBlazor
 @using ScrumMaster.Models
+
+@inject IJSRuntime JSRuntime
 
 <!-- Home page displaying Scrum tasks in a table with CRUD functionality -->
 <MudPaper Class="pa-4">
@@ -19,8 +22,14 @@
             <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
                            Icon="@Icons.Material.Rounded.Restore" OnClick="ResetData" />
         </MudTooltip>
-    </MudStack>
 
+        <!-- Export data button -->
+        <MudTooltip Text="Export to Text">
+            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                           Icon="@Icons.Material.Rounded.Download" OnClick="ExportToText" />
+        </MudTooltip>
+    </MudStack>
+    
     <!-- Scrum items table -->
     <MudTable Items="Items" Hover="true" Bordered="true" Striped="true">
 
