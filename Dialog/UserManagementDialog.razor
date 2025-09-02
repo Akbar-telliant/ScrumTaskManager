@@ -9,15 +9,13 @@
     <DataAnnotationsValidator />
 
     <!-- Main dialog container for the user form -->
-    <MudDialog Style="width:450px;">
+    <MudDialog Style="width:450px;" Title="@DialogTitle">
         <DialogContent>
-            <!-- Dialog title (Add or Edit User) -->
-            <MudText Typo="Typo.h6">@DialogTitle</MudText>
 
             <!-- User Name field (required) -->
             <MudTextField T="string"
                           @bind-Value="User.UserName"
-                          Label="m_User Name"
+                          Label="User Name"
                           Required="true"
                           For="@(() => User.UserName)" />
 
@@ -36,7 +34,7 @@
                        For="@(() => User.Role)">
                 <!-- Role options -->
                 <MudSelectItem Value="TUserRole.Admin">Admin</MudSelectItem>
-                <MudSelectItem Value="TUserRole.User">m_User</MudSelectItem>
+                <MudSelectItem Value="TUserRole.User">User</MudSelectItem>
             </MudSelect>
         </DialogContent>
 
