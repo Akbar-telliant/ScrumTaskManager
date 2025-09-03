@@ -66,11 +66,18 @@ public partial class Home : ComponentBase
     /// <returns>Task representing the async operation.</returns>
     protected override async Task OnInitializedAsync()
     {
-        Items = await ScrumService.GetAllAsync();
-        FilterByDate();
         Users = (await UserService.GetAllAsync()) ?? new();
         Projects = (await ProjectService.GetAllAsync()) ?? new();
+
+        if (Users.Count == 0 || Projects.Count == 0)
+        {
+            m_Snackbar.Add("Cannot create Scrum rows: Users or Projects are missing.", Severity.Warning);
+            return;
+        }
+
         Items = (await ScrumService.GetAllAsync(s => s.Project, s => s.User)) ?? new();
+        m_SelectedDate = DateTime.Today;
+        await EnsureRowsForAllUsers();
     }
 
     /// <summary>
@@ -79,20 +86,39 @@ public partial class Home : ComponentBase
     /// <returns>Task representing the async operation.</returns>
     private async Task AddRow()
     {
-        var defaultUserId = Users.FirstOrDefault()?.Id ?? 0;
-        var defaultProjectId = Projects.FirstOrDefault()?.Id ?? 0;
+        if (Users == null || Users.Count == 0)
+        {
+            m_Snackbar.Add("No users found. Cannot add row.", Severity.Warning);
+            return;
+        }
+
+        if (Projects == null || Projects.Count == 0)
+        {
+            m_Snackbar.Add("No projects found. Cannot add row.", Severity.Warning);
+            return;
+        }
+
+        var defaultUserId = Users.First().Id;      // guaranteed valid
+        var defaultProjectId = Projects.First().Id; // guaranteed valid
 
         var newItem = new ScrumDetails
         {
             Status = ScrumDetails.ScrumStatus.New,
             UserId = defaultUserId,
-            ProjectId = defaultProjectId
+            ProjectId = defaultProjectId,
+            ScrumDate = m_SelectedDate ?? DateTime.Today
         };
 
-        await ScrumService.AddAsync(newItem);
-        Items.Add(newItem);
+        try
+        {
+            await ScrumService.AddAsync(newItem);
+            Items.Add(newItem);
+        }
+        catch (Exception ex)
+        {
+            m_Snackbar.Add($"Failed to add Scrum row: {ex.Message}", Severity.Error);
+        }
     }
-
     /// <summary>
     /// Remove a Scrum row from DB (if it exists) and from UI list.
     /// </summary>
@@ -213,5 +239,53 @@ public partial class Home : ComponentBase
         }
 
         StateHasChanged(); // force UI update
+    }
+
+    /// <summary>
+    /// Ensures each user has at least one Scrum row for the selected date, safely checking for valid Users and Projects.
+    /// </summary>
+    private async Task EnsureRowsForAllUsers()
+    {
+        if (Users == null || Users.Count == 0)
+        {
+            m_Snackbar.Add("No users found. Cannot create Scrum rows.", Severity.Warning);
+            return;
+        }
+
+        if (Projects == null || Projects.Count == 0)
+        {
+            m_Snackbar.Add("No projects found. Cannot create Scrum rows.", Severity.Warning);
+            return;
+        }
+
+        var defaultProjectId = Projects.First().Id; // safe since Projects.Count > 0
+        var date = m_SelectedDate ?? DateTime.Today;
+
+        foreach (var user in Users)
+        {
+            // Only create a row if the user exists and project is valid
+            if (!Items.Any(i => i.UserId == user.Id && i.ScrumDate.Date == date.Date))
+            {
+                var newItem = new ScrumDetails
+                {
+                    Status = ScrumDetails.ScrumStatus.New,
+                    UserId = user.Id,
+                    ProjectId = defaultProjectId,
+                    ScrumDate = date
+                };
+
+                try
+                {
+                    await ScrumService.AddAsync(newItem);
+                    Items.Add(newItem);
+                }
+                catch (Exception ex)
+                {
+                    m_Snackbar.Add($"Failed to add Scrum row for user {user.UserName}: {ex.Message}", Severity.Error);
+                }
+            }
+        }
+
+        FilterByDate();
     }
 }
