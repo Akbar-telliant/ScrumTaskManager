@@ -14,7 +14,7 @@
                        Icon="@Icons.Material.Rounded.Add" OnClick="AddClientAsync" />
         </MudStack>
         <!-- Main clients table -->
-        <MudTable Items="@m_clients" Hover="true" Striped="true" Dense="true">
+        <MudTable Items="@m_clients" Bordered="true" Hover="true" Striped="true" Dense="true" FixedHeader="true" FixedFooter="true">
             <HeaderContent>
                 <MudTh Class="pa-0 ma-0"></MudTh>
                 <MudTh>Name</MudTh>
@@ -67,6 +67,8 @@
                 <!-- Expanded child table for projects under each client -->
                 @if (m_ExpandedClients.Contains(client.Id) && client.Projects?.Any() == true)
                 {
+                    <MudTr> 
+                    <td colspan="6">
                     <MudPaper Class="pa-3 my-2" Elevation="1">
                         <MudTable Items="@client.Projects" Dense="true" Hover="true" Striped="true">
                             <HeaderContent>
@@ -87,16 +89,21 @@
                                 <MudTd>@project.StartDate?.ToShortDateString()</MudTd>
                                 <MudTd>@(project.EndDate?.ToShortDateString() ?? "-")</MudTd>
                                 <MudTd>
-                                    <!-- Project action buttons: Edit, Delete -->
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                               OnClick="@(() => EditProjectAsync(project))">Edit</MudButton>
-
-                                    <MudButton Variant="Variant.Text" Color="Color.Error"
-                                               OnClick="@(() => DeleteProjectAsync(project))">Delete</MudButton>
+                                    <!-- Project action buttons: Edit, Delete -->  
+                                    <MudTooltip Text="@("Edit " + @project.Name)">
+                                        <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Primary" Icon="@Icons.Material.Rounded.Edit"
+                                                       OnClick="@(() => EditProjectAsync(project))" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="@("Delete " + @project.Name)">
+                                        <MudIconButton Variant="Variant.Text" Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Rounded.Delete"
+                                                       OnClick="@(() => DeleteProjectAsync(project))" />
+                                    </MudTooltip>
                                 </MudTd>
                             </RowTemplate>
                         </MudTable>
                     </MudPaper>
+                    </td>
+                    </MudTr>
                 }
             </ChildRowContent>
 

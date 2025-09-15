@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/home"
 
 @using Microsoft.JSInterop
 @using MudBlazor
@@ -37,7 +37,7 @@
    
 
     <!-- Scrum items table -->
-    <MudTable Items="Items" Elevation="5" Hover="true" Bordered="true" Striped="true" Dense="true">
+    <MudTable Items="Items" Elevation="5" FixedHeader="true" Hover="true" Bordered="true" Striped="true" Dense="true">
         <!-- Table header -->
         <HeaderContent>
             <MudTh>Assigned To</MudTh>
@@ -90,15 +90,16 @@
                     }
                 </MudSelect>
             </MudTd>
+
+            <!-- Row actions: Save and Delete -->
             <MudTh>
-                  <MudTooltip Text="Export to Text">
+               <MudTooltip Text="Remove">
                 <MudIconButton Variant="Variant.Text" Size="Size.Small" Icon="@Icons.Material.Rounded.Close" OnClick="() => Remove(context)" />           
-                    </MudTooltip>
+               </MudTooltip>
             </MudTh>
         </RowTemplate>
     </MudTable>
-
-    <!-- Row actions: Save and Delete -->
+   
     <MudStack Row="true" Class="pa-2" Justify="Justify.FlexEnd">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveChanges">
             Save
