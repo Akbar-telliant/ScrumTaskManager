@@ -1,0 +1,45 @@
+﻿
+@using MudBlazor
+
+@page "/"
+
+<MudPaper Class="d-flex align-center justify-center h-100" Elevation="0" Square="true">
+    <MudCard Class="pa-6 mt-12" Style="width:400px;">
+        <MudCardHeader>
+            <MudText Typo="Typo.h5" Align="Align.Center">Login</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <MudTextField @bind-Value="UserName"
+                          Label="Username"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Person"
+                          Class="mb-4"
+                          FullWidth="true" />
+
+            <MudTextField @bind-Value="Password"
+                          Label="Password"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          InputType="InputType.Password"
+                          FullWidth="true" />         
+        </MudCardContent>
+
+        <MudCardActions Class="d-flex justify-center">
+            <MudButton OnClick="LoginAsync"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true">
+                Login
+            </MudButton>
+        </MudCardActions>
+
+        <MudCardContent Class="d-flex justify-center mt-2">
+            <MudText Typo="Typo.body2">
+                Don’t have an account? <MudLink Href="/register">Register</MudLink>
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
