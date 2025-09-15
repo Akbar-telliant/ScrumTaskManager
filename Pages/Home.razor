@@ -7,10 +7,11 @@
 @inject IJSRuntime JSRuntime
 
 <!-- Home page displaying Scrum tasks in a table with CRUD functionality -->
-<MudPaper Class="pa-4">
+<MudPaper Class="pa-2" Elevation="0">
 
     <!-- Toolbar with Add and Reset buttons -->
-    <MudStack Class="pt-4 pb-4 pr-4" Row="true">
+    <MudStack Class="pt-4 pb-4 pr-4" Row="true" Justify="Justify.SpaceBetween">
+        <MudStack Row="true" Spacing="2">
         <!-- Add new row button -->
         <MudTooltip Text="Add Row">
             <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
@@ -28,19 +29,15 @@
             <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
                            Icon="@Icons.Material.Rounded.Download" OnClick="ExportToText" />
         </MudTooltip>
-    </MudStack>
+        </MudStack>
+        <MudStack>
+        <MudDatePicker Label="Scrum Date" Style="width:300px;" Editable="true" @bind-Date="m_SelectedDate" Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="Date" Variant="Variant.Text" />
+        </MudStack>
+    </MudStack>  
+   
 
-    <!-- Date picker and button for selecting a Scrum date and filtering items accordingly -->
-    <MudStack Row="true" Class="mb-4" Spacing="2">
-        <MudDatePicker @bind-Date="m_SelectedDate" Label="Scrum Date" DateFormat="dd/MM/yyyy" Dense="true"
-                       Margin="Margin.Dense" />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Dense="true" OnClick="FilterByDate"
-                   Icon="@Icons.Material.Filled.FilterList" />
-    </MudStack>
-    
     <!-- Scrum items table -->
-    <MudTable Items="Items" Hover="true" Bordered="true" Striped="true">
-
+    <MudTable Items="Items" Elevation="5" Hover="true" Bordered="true" Striped="true" Dense="true">
         <!-- Table header -->
         <HeaderContent>
             <MudTh>Assigned To</MudTh>
@@ -93,16 +90,18 @@
                     }
                 </MudSelect>
             </MudTd>
-
-            <!-- Row actions: Save and Delete -->
-            <MudTd>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => SaveChanges(context)">
-                    Save
-                </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Remove(context)">
-                    Delete
-                </MudButton>
-            </MudTd>
+            <MudTh>
+                  <MudTooltip Text="Export to Text">
+                <MudIconButton Variant="Variant.Text" Size="Size.Small" Icon="@Icons.Material.Rounded.Close" OnClick="() => Remove(context)" />           
+                    </MudTooltip>
+            </MudTh>
         </RowTemplate>
     </MudTable>
+
+    <!-- Row actions: Save and Delete -->
+    <MudStack Row="true" Class="pa-2" Justify="Justify.FlexEnd">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveChanges">
+            Save
+        </MudButton>     
+    </MudStack>
 </MudPaper>
