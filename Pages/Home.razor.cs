@@ -135,23 +135,23 @@ public partial class Home : ComponentBase
     /// </summary>
     /// <param name="item">ScrumDetails item to save or update.</param>
     /// <returns>Task representing the async operation.</returns>
-    private async Task SaveChanges(ScrumDetails item)
+    private async Task SaveChanges()
     {
         try
         {
-            if (item.ScrumDate == default)
-                item.ScrumDate = m_SelectedDate ?? DateTime.Today;
+            //if (Items.ScrumDate == default)
+            //    Items.ScrumDate = m_SelectedDate ?? DateTime.Today;
 
-            if (item.Id == 0)
-            {
-                await ScrumService.AddAsync(item);
-                m_Snackbar.Add("Scrum item added successfully!", Severity.Success);
-            }
-            else
-            {
-                await ScrumService.UpdateAsync(item);
-                m_Snackbar.Add("Scrum item updated successfully!", Severity.Success);
-            }
+            //if (Items.Id == 0)
+            //{
+            //    await ScrumService.AddAsync(item);
+            //    m_Snackbar.Add("Scrum item added successfully!", Severity.Success);
+            //}
+            //else
+            //{
+            //    await ScrumService.UpdateAsync(item);
+            //    m_Snackbar.Add("Scrum item updated successfully!", Severity.Success);
+            //}
 
             // Reload items from DB to keep Items fresh
             Items = await ScrumService.GetAllAsync();
