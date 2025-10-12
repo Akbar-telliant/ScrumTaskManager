@@ -2,6 +2,8 @@
 @using MudBlazor
 
 @inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 
 <MudThemeProvider />
@@ -22,7 +24,7 @@
         <MudText Typo="Typo.caption" Class="ml-2 d-inline-flex">1.0</MudText>
         <MudSpacer />
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" Dense="true"  Color="Color.Inherit" PositionAtCursor="true">
-            <MudMenuItem Icon="@Icons.Material.Filled.Logout" Label="LogOut" Href="/" />
+            <MudMenuItem Icon="@Icons.Material.Filled.Logout" Label="LogOut" OnClick="LogOut" Href="/" />
            </MudMenu>
     </MudAppBar>
     <MudDrawer @bind-Open="m_DrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">

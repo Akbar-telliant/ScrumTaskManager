@@ -1,18 +1,21 @@
 ﻿<!-- Import MudBlazor components -->
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
+
+@inject AuthenticationStateProvider AuthStateProvider
 
 <!-- Sidebar navigation menu -->
 <MudPaper Width="250px" Class="py-3" Elevation="0">
     <MudNavMenu>
         <!-- Home link -->
         <MudNavLink Href="/home" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        @if (IsAdmin)
+        {
+           <!-- User Management link -->
+           <MudNavLink Href="/admin/user-management" Icon="@Icons.Material.Filled.VerifiedUser">User Management</MudNavLink>
 
-        <!-- User Management link -->
-        <MudNavLink Href="/admin/user-management" Icon="@Icons.Material.Filled.VerifiedUser">User Management</MudNavLink>
-
-        <!-- Client Profiles link -->
-        <MudNavLink Href="/admin/client-config" Icon="@Icons.Material.Filled.SupervisedUserCircle">Client Profiles</MudNavLink>
-
-        <!-- Add more links here if needed -->
-    </MudNavMenu>
+           <!-- Client Profiles link -->
+           <MudNavLink Href="/admin/client-config" Icon="@Icons.Material.Filled.SupervisedUserCircle">Client Profiles</MudNavLink>
+        }         
+</MudNavMenu>
 </MudPaper>

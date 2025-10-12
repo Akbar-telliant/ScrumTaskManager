@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ScrumMaster;
 using ScrumMaster.Data;
+using ScrumMaster.Security;
 using ScrumMaster.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +18,13 @@ builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
                       ?? "Data Source=scrummaster.db"));
 
+builder.Services.AddAuthenticationCore();
+builder.Services.AddAuthorizationCore();
+
 // Entity data service
 builder.Services.AddScoped(typeof(EntityDataService<>));
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>(); 
+builder.Services.AddScoped<ProtectedSessionStorage>();
 
 // MudBlazor
 builder.Services.AddMudServices(config =>
@@ -34,7 +42,7 @@ builder.Services.AddMudServices(config =>
 // Blazor (server-side interactive components)
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
+builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

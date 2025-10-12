@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Buffers.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScrumMaster.Models;
 
@@ -28,6 +29,13 @@ public class UserDetails
     [Required(ErrorMessage = "User name is required")]
     [StringLength(250, ErrorMessage = "User name cannot exceed 250 characters")]
     public string? UserName { get; set; }
+
+    /// <summary>
+    /// User Name.
+    /// </summary>
+    [Required(ErrorMessage = "Password is required")]
+    [StringLength(250, ErrorMessage = "Password cannot exceed 250 characters")]
+    public string? Password { get; set; }
 
     /// <summary>
     /// Email.

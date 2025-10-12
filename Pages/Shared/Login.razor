@@ -1,7 +1,13 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.Authorization;
 @using MudBlazor
 
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@inject ISnackbar SnackbarService
+
 @page "/"
+@layout EmpyLayout
 
 <MudPaper Class="d-flex align-center justify-center h-100" Elevation="0" Square="true">
     <MudCard Class="pa-6 mt-12" Style="width:400px;">
@@ -10,7 +16,7 @@
         </MudCardHeader>
 
         <MudCardContent>
-            <MudTextField @bind-Value="UserName"
+            <MudTextField @bind-Value="UserDetails!.UserName"
                           Label="Username"
                           Variant="Variant.Outlined"
                           Adornment="Adornment.Start"
@@ -18,7 +24,7 @@
                           Class="mb-4"
                           FullWidth="true" />
 
-            <MudTextField @bind-Value="Password"
+            <MudTextField @bind-Value="UserDetails.Password"
                           Label="Password"
                           Variant="Variant.Outlined"
                           Adornment="Adornment.Start"
