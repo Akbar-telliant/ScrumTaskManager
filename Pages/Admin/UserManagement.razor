@@ -1,7 +1,14 @@
-﻿@page "/admin/user-management"
-
+﻿@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using ScrumMaster.Models
+
+@* Allow only Admin users to access this page *@
+@attribute [Authorize(Roles = "Admin")]
+
+@page "/admin/user-management"
+
+
+
 
 <!-- Main container for User Management page -->
 <MudContainer>

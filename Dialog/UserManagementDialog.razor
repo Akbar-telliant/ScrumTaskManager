@@ -16,21 +16,32 @@
             <MudTextField T="string"
                           @bind-Value="User.UserName"
                           Label="User Name"
-                          Required="true"
+                          Required
                           For="@(() => User.UserName)" />
+           
+            @if(User.Id == 0)
+            {
+                <!-- Password field (required) -->
+                <MudTextField T="string"
+                @bind-Value="User.Password"
+                Label="Password"
+                InputType="InputType.Password"
+                Required
+                For="@(() => User.Password)" />
+            }
 
             <!-- Email field (required) -->
             <MudTextField T="string"
                           @bind-Value="User.Email"
                           Label="Email"
-                          Required="true"
+                          Required
                           For="@(() => User.Email)" />
 
             <!-- User role dropdown (Admin/User) -->
             <MudSelect T="TUserRole"
                        @bind-Value="User.Role"
                        Label="Role"
-                       Required="true"
+                       Required
                        For="@(() => User.Role)">
                 <!-- Role options -->
                 <MudSelectItem Value="TUserRole.Admin">Admin</MudSelectItem>

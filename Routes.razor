@@ -1,15 +1,23 @@
-﻿@using Microsoft.AspNetCore.Components.Routing
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
+@using ScrumMaster.Pages.Shared
 
 <!-- Router handles navigation and route mapping -->
 <Router AppAssembly="@typeof(Program).Assembly">
 
     <!-- If a matching route is found -->
     <Found Context="routeData">
-        <!-- Render the page inside the default MainLayout -->
-        <RouteView RouteData="@routeData" DefaultLayout="typeof(Pages.Shared.MainLayout)" />
+          <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <NotAccess />
+                </NotAuthorized>
+                <Authorizing>
+                <!-- Render the page inside the default MainLayout -->
+                <RouteView RouteData="@routeData" DefaultLayout="typeof(Pages.Shared.MainLayout)" />
+                </Authorizing>
+            </AuthorizeRouteView>       
     </Found>
-
     <!-- If no matching route is found -->
     <NotFound>
         <!-- Title for the browser tab -->
