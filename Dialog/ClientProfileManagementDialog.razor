@@ -2,6 +2,9 @@
 @using MudBlazor
 @using ScrumMaster.Models
 
+@inject IDialogService m_DialogService
+@inject ISnackbar m_Snackbar
+
 <!-- EditForm binds to the m_ClientProfile model and handles form submission -->
 <EditForm Model="@ClientProfile" OnValidSubmit="OnValidSubmitAsync">
     <!-- Enables validation using DataAnnotations attributes from the model -->

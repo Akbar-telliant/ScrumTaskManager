@@ -41,7 +41,11 @@ public partial class ClientProfileManagementDialog
         if (ClientProfile.Id == 0)
         {
             // New entity → Add
-            await m_ClientService.AddAsync(ClientProfile);
+            var client = await m_ClientService.AddAsync(ClientProfile);
+            if(client.Id > 0)
+            {
+                await AddProjectAsync(client);
+            }
         }
         else
         {
@@ -56,4 +60,33 @@ public partial class ClientProfileManagementDialog
     /// Closes dialog without saving.
     /// </summary>
     private void Cancel() => m_MudDialog?.Cancel();
+
+    /// <summary>
+    /// Opens a dialog to add a new project for the given client.
+    /// </summary>
+    /// <param name="client">The client for whom the project will be added.</param>
+    /// <returns>A task representing the asynchronous add operation.</returns>
+    private async Task AddProjectAsync(ClientProfile client)
+    {
+        var newProject = new ProjectDetails
+        {
+            ClientId = client.Id,
+            StartDate = DateTime.Now,
+            DefaultTeamSize = 5 // Default TeamSize
+        };
+
+        var parameters = new DialogParameters
+        {
+            { "ProjectDetail", newProject },
+            { "DialogTitle", $"Add Project for {client.Name}" }
+        };
+
+        var dialog = await m_DialogService.ShowAsync<ProjectDetailDialog>("Add Project", parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {           
+            m_Snackbar.Add("Project added successfully!", Severity.Success);
+        }
+    }
 }

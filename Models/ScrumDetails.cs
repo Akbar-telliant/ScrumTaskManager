@@ -57,11 +57,6 @@ public class ScrumDetails
     public int UserId { get; set; }
 
     /// <summary>
-    /// Navigation property for the assigned user.
-    /// </summary>
-    public UserDetails? User { get; set; }
-
-    /// <summary>
     /// Foreign key referencing the project.
     /// </summary>
     [Required]
@@ -69,16 +64,11 @@ public class ScrumDetails
     public int ProjectId { get; set; }
 
     /// <summary>
-    /// Navigation property for the project.
-    /// </summary>
-    public ProjectDetails? Project { get; set; }
-
-    /// <summary>
     /// Unique identifier of the work item.
     /// </summary>
     [Required, StringLength(50)]
-    [DisplayName("Item Id")]
-    public string ItemId { get; set; } = string.Empty;
+    [DisplayName("Task Id")]
+    public string TaskID { get; set; } = string.Empty;
 
     /// <summary>
     /// Detailed description of the work item.
