@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+@using ScrumMaster.Models
+@using ScrumMaster.Pages.Shared
+@using static ScrumMaster.Models.UserDetails
+
+@page "/admin/registeruser"
+@layout EmpyLayout
+@inject ISnackbar SnackbarService
+@inject NavigationManager Navigation
+
+<MudPaper Class="d-flex align-center justify-center h-100" Elevation="0" Square="true">
+    <MudCard Class="pa-6 mt-12" Style="width:400px;">
+        <MudCardHeader>
+            <MudText Typo="Typo.h5" Align="Align.Center">Login</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+          <EditForm Model="UserDetails" OnValidSubmit="HandleValidSubmitAsync">
+             <DataAnnotationsValidator />   
+                <MudTextField @bind-Value="UserDetails!.UserName"
+                              Label="Username"
+                              InputType="InputType.Text"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Person"
+                              Class="mb-4"
+                              FullWidth="true" Required/>
+                <MudTextField @bind-Value="UserDetails!.Email"
+                              Label="Email"
+                              InputType="InputType.Email"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Email"
+                              Class="mb-4"
+                              FullWidth="true" Required />
+                <MudTextField @bind-Value="UserDetails!.Password"
+                              Label="Password"
+                              InputType="InputType.Password"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Password"
+                              Class="mb-4"
+                              FullWidth="true" Required />
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               FullWidth="true">
+                        Register
+                    </MudButton>
+                </MudCardActions>
+          </EditForm>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+

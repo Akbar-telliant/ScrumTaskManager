@@ -29,14 +29,13 @@ builder.Services.AddScoped<ProtectedSessionStorage>();
 // MudBlazor
 builder.Services.AddMudServices(config =>
 {
-    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
-    config.SnackbarConfiguration.PreventDuplicates = true;
-    config.SnackbarConfiguration.NewestOnTop = true;
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = false;
     config.SnackbarConfiguration.ShowCloseIcon = true;
     config.SnackbarConfiguration.VisibleStateDuration = 3000;
     config.SnackbarConfiguration.HideTransitionDuration = 250;
     config.SnackbarConfiguration.ShowTransitionDuration = 250;
-    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
 // Blazor (server-side interactive components)

@@ -47,8 +47,7 @@ namespace ScrumMaster.Pages.Shared
                 else
                 {
                     SnackbarService.Add("Invalid username or password!", Severity.Error);
-                }
-                await Task.CompletedTask;
+                }             
             }
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumMaster.Data;
 
@@ -10,9 +11,11 @@ using ScrumMaster.Data;
 namespace ScrumMaster.Migrations
 {
     [DbContext(typeof(ScrumMasterDbContext))]
-    partial class ScrumMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023171157_PendingChanges")]
+    partial class PendingChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -128,6 +131,7 @@ namespace ScrumMaster.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 

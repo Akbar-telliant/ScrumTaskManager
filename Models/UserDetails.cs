@@ -33,7 +33,6 @@ public class UserDetails
     /// <summary>
     /// User Name.
     /// </summary>
-    [Required(ErrorMessage = "Password is required")]
     [StringLength(250, ErrorMessage = "Password cannot exceed 250 characters")]
     public string? Password { get; set; }
 

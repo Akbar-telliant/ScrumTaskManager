@@ -75,7 +75,7 @@ public partial class Home : ComponentBase
             return;
         }
 
-        Items = (await ScrumService.GetAllAsync(s => s.Project, s => s.User)) ?? new();
+        Items = (await ScrumService.GetAllAsync(s => s.ProjectId, s => s.UserId)) ?? new();
         m_SelectedDate = DateTime.Today;
         await EnsureRowsForAllUsers();
     }
