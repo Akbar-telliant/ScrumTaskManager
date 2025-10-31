@@ -112,4 +112,12 @@ public class EntityDataService<T> where T : class
         m_DBSet.Remove(entity);
         await m_Context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Checks if any entity exists matching the given predicate.
+    /// </summary>
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await m_DBSet.AsNoTracking().AnyAsync(predicate);
+    }
 }

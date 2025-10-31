@@ -51,5 +51,10 @@ public class ScrumMasterDbContext : DbContext
             .WithOne(p => p.Client)
             .HasForeignKey(p => p.ClientId)
             .OnDelete(DeleteBehavior.Cascade); // delete projects when client is deleted
+
+        // Enforce unique email at DB level
+        modelBuilder.Entity<UserDetails>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
     }
 }

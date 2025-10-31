@@ -1,5 +1,4 @@
-﻿using System.Buffers.Text;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ScrumMaster.Models;
 
@@ -24,27 +23,28 @@ public class UserDetails
     public int Id { get; set; }
 
     /// <summary>
-    /// User Name.
+    /// Name of the user used for login or identification.
     /// </summary>
     [Required(ErrorMessage = "User name is required")]
     [StringLength(250, ErrorMessage = "User name cannot exceed 250 characters")]
     public string? UserName { get; set; }
 
     /// <summary>
-    /// User Name.
+    /// Password associated with the user account.
     /// </summary>
     [StringLength(250, ErrorMessage = "Password cannot exceed 250 characters")]
     public string? Password { get; set; }
 
     /// <summary>
-    /// Email.
+    /// Registered email address of the user.
     /// </summary>
     [Required(ErrorMessage = "Email is required")]
-    [EmailAddress(ErrorMessage = "Invalid email address format")]
+    [EmailAddress(ErrorMessage = "Invalid email address")]
+    [StringLength(250)]
     public string? Email { get; set; }
 
     /// <summary>
-    /// Role of the user.
+    /// Assigned role or permission level of the user.
     /// </summary>
     [Required(ErrorMessage = "Role is required")]
     public TUserRole Role { get; set; } = TUserRole.User;
