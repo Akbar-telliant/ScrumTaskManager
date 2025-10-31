@@ -52,7 +52,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ScrumMasterDbContext>();
-    //db.Database.Migrate(); // ✅ applies migrations (creates/updates schema)
+    db.Database.Migrate(); // ✅ applies migrations (creates/updates schema)
 }
 
 // ----------------------
