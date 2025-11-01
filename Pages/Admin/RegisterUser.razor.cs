@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using ScrumMaster.Models;
 using ScrumMaster.Services;
+using static ScrumMaster.Models.UserDetails;
 
 namespace ScrumMaster.Pages.Admin;
 
@@ -12,21 +13,31 @@ namespace ScrumMaster.Pages.Admin;
 public partial class RegisterUser
 {
     /// <summary>
-    /// Service for performing CRUD operations on user entities.
+    /// Service used for performing CRUD operations on user entities.
     /// </summary>
     [Inject]
     private EntityDataService<UserDetails> m_UserService { get; set; } = default!;
 
     /// <summary>
-    /// Model containing user registration details.
+    /// Service for handling page navigation within the application.
+    /// </summary>
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    /// <summary>
+    /// Gets or sets the user details.
     /// </summary>
     public UserDetails UserDetails { get; set; } = new();
 
     /// <summary>
-    /// Handles form submission and registers the user if validation passes.
+    /// Stores the last verified email to prevent redundant database checks.
     /// </summary>
-    /// <returns> Task representing the asynchronous operation. </returns>
-    public async Task HandleValidSubmitAsync()
+    private string? m_LastCheckedEmail;
+
+    /// <summary>
+    /// Registers a new user if validation passes.
+    /// </summary>
+    public async Task RegisterUserAsync()
     {
         if (string.IsNullOrWhiteSpace(UserDetails?.Email))
         {
@@ -34,19 +45,19 @@ public partial class RegisterUser
             return;
         }
 
-        // Single efficient DB query — does not fetch all rows
-        bool emailExists = await m_UserService.ExistsAsync(u => u.Email == UserDetails.Email);
-
-        if (emailExists)
-        {
-            SnackbarService.Add("This email is already registered!", Severity.Warning);
-            return;
-        }
-
         try
         {
-            var user = await m_UserService.AddAsync(UserDetails);
-            if (user.Id > 0)
+            if (await m_UserService.ExistsAsync(u => u.Email == UserDetails.Email).ConfigureAwait(false))
+            {
+                SnackbarService.Add("This email is already registered!", Severity.Warning);
+                return;
+            }
+
+            UserDetails.Role = UserDetails.Role == 0 ? TUserRole.User : UserDetails.Role;
+
+            var user = await m_UserService.AddAsync(UserDetails).ConfigureAwait(false);
+
+            if (user is { Id: > 0 })
             {
                 SnackbarService.Add("User registered successfully!", Severity.Success);
                 Navigation.NavigateTo("/");
@@ -56,33 +67,47 @@ public partial class RegisterUser
                 SnackbarService.Add("Something went wrong while creating the user.", Severity.Error);
             }
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException ex)
         {
-            // In case of race condition or DB unique constraint violation
-            // (unique index on Email), catch and display a friendly message.
+            Console.Error.WriteLine($"[DB ERROR] {ex.GetType().Name}: {ex.Message}");
             SnackbarService.Add("Email already exists or database error occurred.", Severity.Error);
-            // Optionally log dbEx
         }
         catch (Exception ex)
         {
+            Console.Error.WriteLine($"[ERROR] {ex.GetType().Name}: {ex.Message}");
             SnackbarService.Add("An unexpected error occurred.", Severity.Error);
-            // Optionally log ex
         }
     }
 
     /// <summary>
-    /// Checks whether the entered email address already exists when the field loses focus.
+    /// Validates whether the entered email already exists when the field loses focus.
     /// </summary>
-    /// <param name="args">Focus event arguments triggered when the email input loses focus.</param>
-    /// <returns> A task representing the asynchronous email existence check operation. </returns>
     private async Task CheckEmailExistsAsync(FocusEventArgs args)
     {
-        if (string.IsNullOrWhiteSpace(UserDetails?.Email))
+        var email = UserDetails?.Email?.Trim();
+        if (string.IsNullOrEmpty(email))
+        {
             return;
+        }
 
-        bool exists = await m_UserService.ExistsAsync(u => u.Email == UserDetails.Email);
-        if (exists)
-            SnackbarService.Add("This email is already registered!", Severity.Warning);
+        if (string.Equals(email, m_LastCheckedEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        m_LastCheckedEmail = email;
+
+        try
+        {
+            if (await m_UserService.ExistsAsync(u => u.Email == email).ConfigureAwait(false))
+            {
+                SnackbarService.Add("This email is already registered!", Severity.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[Email Check Error] {ex.GetType().Name}: {ex.Message}");
+            SnackbarService.Add("Unable to verify email at this moment.", Severity.Error);
+        }
     }
 }
-

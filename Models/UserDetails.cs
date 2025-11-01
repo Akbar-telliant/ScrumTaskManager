@@ -12,8 +12,8 @@ public class UserDetails
     /// </summary>
     public enum TUserRole
     {
-        Admin,
-        User
+        Admin = 1,
+        User = 2
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public class UserDetails
     /// <summary>
     /// Password associated with the user account.
     /// </summary>
-    [StringLength(250, ErrorMessage = "Password cannot exceed 250 characters")]
+    [StringLength(15, ErrorMessage = "Password cannot exceed 15 characters")]
     public string? Password { get; set; }
 
     /// <summary>
@@ -56,14 +56,14 @@ public class UserDetails
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserDetails"/> class.
+    /// Initializes a new instance of the user details class.
     /// </summary>
     public UserDetails()
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserDetails"/> class with specified values.
+    /// Initializes a new instance of the user details class with specified values.
     /// </summary>
     /// <param name="name">The user's name.</param>
     /// <param name="email">The user's email address.</param>
