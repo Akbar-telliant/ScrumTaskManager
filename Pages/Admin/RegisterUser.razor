@@ -9,7 +9,6 @@
 @layout EmpyLayout
 
 @inject ISnackbar SnackbarService
-@inject NavigationManager Navigation
 
 <MudPaper Class="d-flex align-center justify-center h-100" Elevation="0" Square="true">
     <MudCard Class="pa-6 mt-12" Style="width:400px;">
@@ -18,8 +17,11 @@
         </MudCardHeader>
 
         <MudCardContent>
-          <EditForm Model="UserDetails" OnValidSubmit="HandleValidSubmitAsync">
-             <DataAnnotationsValidator />   
+            <!-- Form for registering a new user -->
+            <EditForm Model="UserDetails" OnValidSubmit="RegisterUserAsync">
+                <DataAnnotationsValidator />
+
+                <!-- Username input -->
                 <MudTextField @bind-Value="UserDetails!.UserName"
                               Label="Username"
                               InputType="InputType.Text"
@@ -27,7 +29,10 @@
                               Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Person"
                               Class="mb-4"
-                              FullWidth="true" Required/>                
+                              FullWidth="true"
+                              Required />
+
+                <!-- Password input (max length 15) -->
                 <MudTextField @bind-Value="UserDetails!.Password"
                               Label="Password"
                               InputType="InputType.Password"
@@ -35,7 +40,11 @@
                               Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Password"
                               Class="mb-4"
-                              FullWidth="true" Required />
+                              FullWidth="true"
+                              MaxLength="15"
+                              Required />
+
+                <!-- Email input with duplicate check -->
                 <MudTextField @bind-Value="UserDetails!.Email"
                               Label="Email"
                               InputType="InputType.Email"
@@ -43,8 +52,17 @@
                               Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Email"
                               Class="mb-4"
-                              FullWidth="true" Required
+                              FullWidth="true"
+                              Required
                               OnBlur="CheckEmailExistsAsync" />
+
+                <!-- Role selection (Admin/User) -->
+                <MudRadioGroup T="TUserRole" @bind-Value="UserDetails.Role" Class="mb-4">
+                    <MudRadio T="TUserRole" Value="TUserRole.Admin" Label="Admin" />
+                    <MudRadio T="TUserRole" Value="TUserRole.User" Label="User" />
+                </MudRadioGroup>
+
+                <!-- Submit button -->
                 <MudCardActions Class="d-flex justify-center">
                     <MudButton ButtonType="ButtonType.Submit"
                                Variant="Variant.Filled"
@@ -53,8 +71,7 @@
                         Register
                     </MudButton>
                 </MudCardActions>
-          </EditForm>
+            </EditForm>
         </MudCardContent>
     </MudCard>
 </MudPaper>
-
