@@ -110,4 +110,12 @@ public partial class RegisterUser
             SnackbarService.Add("Unable to verify email at this moment.", Severity.Error);
         }
     }
+
+    /// <summary>
+    /// Navigates the application to the login page.
+    /// </summary>
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/");
+    }
 }

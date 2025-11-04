@@ -57,20 +57,38 @@
                               OnBlur="CheckEmailExistsAsync" />
 
                 <!-- Role selection (Admin/User) -->
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Role</MudText>
                 <MudRadioGroup T="TUserRole" @bind-Value="UserDetails.Role" Class="mb-4">
-                    <MudRadio T="TUserRole" Value="TUserRole.Admin" Label="Admin" />
-                    <MudRadio T="TUserRole" Value="TUserRole.User" Label="User" />
+                    <MudRadio T="TUserRole" Value="TUserRole.Admin">Admin</MudRadio>
+                    <MudRadio T="TUserRole" Value="TUserRole.User">User</MudRadio>
                 </MudRadioGroup>
+                
+                <MudCardActions Class="justify-center">
+                    <MudGrid Justify="Justify.Center" Spacing="2" Class="w-100">
+                        <MudItem xs="6" sm="5" md="4" lg="4">
+                            <!-- Submit button -->
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Style="height:36px;">
+                                Register
+                            </MudButton>
+                        </MudItem>
 
-                <!-- Submit button -->
-                <MudCardActions Class="d-flex justify-center">
-                    <MudButton ButtonType="ButtonType.Submit"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               FullWidth="true">
-                        Register
-                    </MudButton>
+                        <MudItem xs="6" sm="5" md="4" lg="4">
+                            <!-- Login button -->
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Style="height:36px;"
+                                       OnClick="NavigateToLogin">
+                                Login
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
                 </MudCardActions>
+
             </EditForm>
         </MudCardContent>
     </MudCard>
