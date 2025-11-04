@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization;
 @using MudBlazor
 
-
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Navigation
 @inject ISnackbar SnackbarService
@@ -9,13 +8,21 @@
 @page "/"
 @layout EmpyLayout
 
+<!-- Main centered container -->
 <MudPaper Class="d-flex align-center justify-center h-100" Elevation="0" Square="true">
+
+    <!-- Login card box -->
     <MudCard Class="pa-6 mt-12" Style="width:400px;">
+
+        <!-- Card header title -->
         <MudCardHeader>
             <MudText Typo="Typo.h5" Align="Align.Center">Login</MudText>
         </MudCardHeader>
 
+        <!-- Input fields section -->
         <MudCardContent>
+
+            <!-- Username input -->
             <MudTextField @bind-Value="UserDetails!.UserName"
                           Label="Username"
                           Variant="Variant.Outlined"
@@ -24,15 +31,17 @@
                           Class="mb-4"
                           FullWidth="true" />
 
+            <!-- Password input -->
             <MudTextField @bind-Value="UserDetails.Password"
                           Label="Password"
                           Variant="Variant.Outlined"
                           Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Lock"
                           InputType="InputType.Password"
-                          FullWidth="true" />         
+                          FullWidth="true" />
         </MudCardContent>
 
+        <!-- Login button -->
         <MudCardActions Class="d-flex justify-center">
             <MudButton OnClick="LoginAsync"
                        Variant="Variant.Filled"
@@ -42,10 +51,12 @@
             </MudButton>
         </MudCardActions>
 
+        <!-- Link to registration page -->
         <MudCardContent Class="d-flex justify-center mt-2">
             <MudText Typo="Typo.body2">
                 Don’t have an account? <MudLink Href="/admin/registeruser">Register</MudLink>
             </MudText>
         </MudCardContent>
+
     </MudCard>
 </MudPaper>
