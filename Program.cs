@@ -18,6 +18,20 @@ builder.Services.AddDbContext<ScrumMasterDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
                       ?? "Data Source=scrummaster.db"));
 
+// ----------------------------------------------------
+// Authentication (Required for ASP.Net core pipeline)
+// ----------------------------------------------------
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "Cookies";
+})
+.AddCookie("Cookies", options =>
+{
+    options.LoginPath = "/login";
+    options.AccessDeniedPath = "/denied";
+});
+
 builder.Services.AddAuthenticationCore();
 builder.Services.AddAuthorizationCore();
 
@@ -67,6 +81,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Map root Razor component
 app.MapRazorComponents<App>()
